@@ -32,6 +32,9 @@ func (_ *RouterInitializer) InitializeEarly(r *gin.Engine) error {
 		ui.GET("/diagram", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "diagram.tmpl", gin.H{"env": envMap, "category": "design"})
 		})
+		ui.GET("/requirement", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "requirement.tmpl", gin.H{"env": envMap, "category": "design"})
+		})
 	}
 	return nil
 }
