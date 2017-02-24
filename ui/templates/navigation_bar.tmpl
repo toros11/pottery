@@ -25,6 +25,9 @@
             <li><a href="/ui/diagram?diagram_type=logical">Logical</a></li>
           </ul>
         </li>
+        <li {{if eq .resource "requirement"}}class="active"{{end}}>
+          <a href="/ui/requirement"><span class="glyphicon glyphicon-transfer"></span> Communication Requirement</a>
+        </li>
       </ul>
     </div>
   </div>
