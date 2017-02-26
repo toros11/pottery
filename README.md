@@ -17,6 +17,8 @@ It provides graphical network diagram views based on clay datastore.
 # How to build and run
 
 ```
+$ cd /path/to/pottery
+$ go-bindata -pkg ui -o ui/bindata.go ui/files/... ui/templates/...
 $ # note: add "pottery.HookSubmodules()" in HookSubmodules()#submodules.go in clay.
 $ # note: in current version, you need to create symlink to pottery ui directory in the same directory which clay is located.
 $ cd /path/to/clay
