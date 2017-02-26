@@ -1,0 +1,21 @@
+{{define "environment_test_script"}}
+<hr>
+<div class="row">
+  <div class="col-xs-2">
+      Service test script template
+      <br>
+      [{@service_name}] Server / Client
+  </div>
+  <div class="col-xs-5">
+      <textarea id="{@test_script_id}_server" name="{@test_script_name}_server" rows="8" class="form-control"></textarea>
+  </div>
+  <div class="col-xs-5">
+      <textarea id="{@test_script_id}_client" name="{@test_script_name}_client" rows="8" class="form-control"></textarea>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+      &nbsp;
+  </div>
+</div>
+{{end}}
