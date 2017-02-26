@@ -95,12 +95,13 @@ resource "openvnet_topology" "topo-physical" {
 #
 # Below is the virtual network
 #
-{{range $index, $segment := .Segments}}
+{{- range $index, $segment := .Segments}}
 resource "openvnet_segment" "seg-seg{{$index}}" {
   uuid = "seg-seg{{$index}}"
   mode = "virtual"
 }
 {{end}}
+
 resource "openvnet_topology" "topo-vnet" {
   uuid = "topo-vnet"
   mode = "simple_overlay"
@@ -114,13 +115,18 @@ resource "openvnet_topology" "topo-vnet" {
   }
 {{end}}
 }
+{{- $portMap := map}}
+{{- range $index, $node := .Nodes}}
+{{- $portMap := putToMap $portMap $node.Name 0}}
+{{- end}}
 
 {{range $index, $segment := .Segments}}
 #
 # Interfaces in segment {{$index}}
 #
-{{range $index2, $port := $segment.Ports}}
-{{if eq $port.Node.NodePvID 1}}
+{{- range $index2, $port := $segment.Ports}}
+{{- $interfaceIndex := getFromMap $portMap $port.Node.Name}}
+{{- if eq $port.Node.NodePvID 1}}
 resource "openvnet_interface" "{{$port.Node.Name}}-seg{{$index}}" {
   uuid                = "if-{{$port.Node.Name}}{{$port.Name}}"
   port_name           = "{{$port.Name}}"
@@ -129,23 +135,25 @@ resource "openvnet_interface" "{{$port.Node.Name}}-seg{{$index}}" {
   mac_address         = "{{$port.MacAddress.String}}"
   mode                = "vif"
 }
-{{else}}
-resource "openvnet_interface" "{{$port.Node.Name}}" {
-  uuid                = "if-{{$port.Node.Name}}"
-  port_name           = "${openvdc_instance.{{$port.Node.Name}}.id}_{{printf "%2d" $index2}}"
+{{- else}}
+resource "openvnet_interface" "{{$port.Node.Name}}-{{printf "%02d" $interfaceIndex}}" {
+  uuid                = "if-{{$port.Node.Name}}{{printf "%02d" $interfaceIndex}}"
+  port_name           = "${openvdc_instance.{{$port.Node.Name}}.id}_{{printf "%02d" $interfaceIndex}}"
   segment_uuid        = "${openvnet_segment.seg-seg{{$index}}.uuid}"
   mac_address         = "{{$port.MacAddress.String}}"
   mode                = "vif"
 }
-{{end}}
-{{end}}
-{{end}}
+{{- end}}
+{{$interfaceIndex := add $interfaceIndex 1}}
+{{- $portMap := putToMap $portMap $port.Node.Name $interfaceIndex}}
+{{- end}}
+{{- end}}
 
 #
 # OpenVDC instances
 #
-{{range $index, $node := .Nodes}}
-{{if eq $node.NodeTypeID 6}}
+{{- range $index, $node := .Nodes}}
+{{- if eq $node.NodeTypeID 6}}
 resource "openvdc_instance" "{{$node.Name}}" {
   template = "centos/7/lxc"
 {{range $index2, $port := $node.Ports}}
@@ -157,5 +165,5 @@ resource "openvdc_instance" "{{$node.Name}}" {
   }
 {{end}}
 }
-{{end}}
+{{- end}}
 {{end}}

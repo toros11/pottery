@@ -26,6 +26,9 @@
             <li><a href="/ui/requirement"><span class="glyphicon glyphicon-transfer"></span> Communication Requirement</a></li>
           </ul>
         </li>
+        <li {{if eq .category "environment"}}class="active"{{end}}>
+          <a href="/ui/environment"><span class="glyphicon glyphicon-wrench"></span> Environment</a>
+        </li>
       </ul>
     </div>
   </div>

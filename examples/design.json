@@ -37,6 +37,17 @@
                 "port_number": 53
             }
         ],
+        "environments": [
+            {
+                "id": 1,
+                "template_id": 1,
+                "test_case_id": 1,
+                "git_repository_uri": "/data/clay_generated_conf",
+                "design_file_name": "design.json",
+                "template_file_name": "terraform.tf",
+                "test_case_directory_name": "testcases"
+            }
+        ],
         "node_groups": [],
         "node_pvs": [
             {
@@ -2198,9 +2209,76 @@
             }
         ],
         "template_external_parameters": [],
-        "templates": [],
-        "test_cases": [],
-        "test_commands": [],
-        "test_patterns": []
+        "templates": [
+            {
+                "id": 1,
+                "name": "terraform",
+                "template_content": "provider \"openvnet\" {\n  api_endpoint = \"http://172.16.3.10:9090/api/1.0\"\n}\n\n#\n# MAC address range for use in datapath-network etc.\n#\n\nresource \"openvnet_mac_range_group\" \"mrg\" {\n  uuid = \"mrg-dpg\"\n\n  mac_range {\n    begin_mac_address = \"08:00:27:aa:00:00\"\n    end_mac_address   = \"08:00:27:aa:ff:ff\"\n  }\n}\n\n#\n# Physical network\n#\n\nresource \"openvnet_network\" \"physical-network\" {\n  uuid         = \"nw-phys1\"\n  display_name = \"physical network that CI and ofs are on\"\n  ipv4_network = \"172.16.4.0\"\n  ipv4_prefix  = 24\n  network_mode = \"physical\"\n}\n\n#\n# CI datapath\n#\n\nresource \"openvnet_datapath\" \"dp-ci\" {\n  uuid         = \"dp-ci\"\n  node_id      = \"vna1\"\n  display_name = \"ci_datapath\"\n  dpid         = \"0x0000aaaaaaaaaaaa\"\n}\n\nresource \"openvnet_interface\" \"if-host-ci\" {\n  uuid                = \"if-ci\"\n  mode                = \"host\"\n  port_name           = \"eth1\"\n  mac_address         = \"02:01:00:00:00:01\"\n  owner_datapath_uuid = \"${openvnet_datapath.dp-ci.id}\"\n  network_uuid        = \"${openvnet_network.physical-network.uuid}\"\n  ipv4_address        = \"172.16.4.10\"\n}\n\n#\n# OFS datapath\n#\n\nresource \"openvnet_datapath\" \"dp-ofs\" {\n  uuid         = \"dp-ofs\"\n  node_id      = \"vna2\"\n  display_name = \"ofs_datapath\"\n  dpid         = \"0x0000bbbbbbbbbbbb\"\n}\n\n# The IP lease on the ofs host interface is a fake. OFS and CI are on the\n# same L2 network. This is done because the current tunnel manager code requires\n# an IP lease but we can safely assign a fake one since MAC2MAC tunnels ignore\n# IP addresses anyway. Only works if we're on the same L2 though.\nresource \"openvnet_interface\" \"if-host-ofs\" {\n  uuid                = \"if-ofs\"\n  mode                = \"host\"\n  port_name           = \"eth9\"\n  mac_address         = \"52:56:01:00:01:01\"\n  owner_datapath_uuid = \"${openvnet_datapath.dp-ofs.uuid}\"\n  network_uuid        = \"${openvnet_network.physical-network.uuid}\"\n  ipv4_address        = \"172.16.4.11\" # \u003c= fake\n}\n\nresource \"openvnet_topology\" \"topo-physical\" {\n  uuid = \"topo-physical\"\n  mode = \"simple_underlay\"\n\n  network {\n    uuid = \"${openvnet_network.physical-network.uuid}\"\n  }\n\n  datapath {\n    uuid = \"${openvnet_datapath.dp-ci.uuid}\"\n    interface_uuid = \"${openvnet_interface.if-host-ci.uuid}\"\n  }\n\n  datapath {\n    uuid = \"${openvnet_datapath.dp-ofs.uuid}\"\n    interface_uuid = \"${openvnet_interface.if-host-ofs.uuid}\"\n  }\n}\n\n#\n# Below is the virtual network\n#\n{{range $index, $segment := .Segments}}\nresource \"openvnet_segment\" \"seg-seg{{$index}}\" {\n  uuid = \"seg-seg{{$index}}\"\n  mode = \"virtual\"\n}\n{{end}}\nresource \"openvnet_topology\" \"topo-vnet\" {\n  uuid = \"topo-vnet\"\n  mode = \"simple_overlay\"\n\n  underlay {\n    uuid = \"${openvnet_topology.topo-physical.uuid}\"\n  }\n{{range $index, $segment := .Segments}}\n  segment {\n    uuid = \"${openvnet_segment.seg-seg{{$index}}.uuid}\"\n  }\n{{end}}\n}\n\n{{range $index, $segment := .Segments}}\n#\n# Interfaces in segment {{$index}}\n#\n{{range $index2, $port := $segment.Ports}}\n{{if eq $port.Node.NodePvID 1}}\nresource \"openvnet_interface\" \"{{$port.Node.Name}}-seg{{$index}}\" {\n  uuid                = \"if-{{$port.Node.Name}}{{$port.Name}}\"\n  port_name           = \"{{$port.Name}}\"\n  owner_datapath_uuid = \"${openvnet_datapath.dp-ofs.uuid}\"\n  segment_uuid        = \"${openvnet_segment.seg-seg{{$index}}.uuid}\"\n  mac_address         = \"{{$port.MacAddress.String}}\"\n}\n{{else}}\nresource \"openvnet_interface\" \"{{$port.Node.Name}}\" {\n  uuid                = \"if-{{$port.Node.Name}}\"\n  port_name           = \"${openvdc_instance.{{$port.Node.Name}}.id}\"\n  segment_uuid        = \"${openvnet_segment.seg-seg{{$index}}.uuid}\"\n  mac_address         = \"{{$port.MacAddress.String}}\"\n}\n{{end}}\n{{end}}\n{{end}}\n\n#\n# OpenVDC instances\n#\n{{range $index, $node := .Nodes}}\n{{if eq $node.NodeTypeID 6}}\nresource \"openvdc_instance\" \"{{$node.Name}}\" {\n  template = \"centos/7/lxc\"\n{{range $index2, $port := $node.Ports}}\n  interface {\n    type = \"veth\"\n    bridge = \"ovs\"\n    ipv4addr = \"{{$port.Ipv4Address.String}}\"\n    macaddr = \"{{$port.MacAddress.String}}\"\n  }\n{{end}}\n}\n{{end}}\n{{end}}\n",
+                "template_external_parameters": null
+            }
+        ],
+        "test_cases": [
+            {
+                "id": 1,
+                "test_patterns": null,
+                "test_runner_script_template": "#!/bin/bash\n\nwork_dir=\"{{.GitRepositoryURI}}\"\ntestcase_dir=\"${work_dir}/{{.TestCaseDirectoryName}}\"\nresult_file=\"${work_dir}/test_result.txt\"\nlog_file=\"${work_dir}/test_log.txt\"\n\n\\rm -f ${result_file} ${log_file}\n\ncd ${testcase_dir}\n\nfind . -type f -name \"*_server.sh\" | while read server_script; do\n  prefix=\"`echo ${server_script} | awk -F'_server' '{print $1}'`\"\n  echo \"----- ${prefix} -----\" \u003e\u003e ${log_file}\n  client_script=\"${prefix}_client.sh\"\n  chmod 755 ${server_script} ${client_script}\n  server_log=\"`${server_script}`\"\n  server_script_result=$?\n  echo \"+++++ server_log +++++\" \u003e\u003e ${log_file}\n  echo \"${server_log}\" \u003e\u003e ${log_file}\n  if [ ${server_script_result} -ne 0 ]; then\n    echo \"${prefix},NG\" \u003e\u003e ${result_file}\n  else\n    sleep 2\n    client_log=\"`${client_script}`\"\n    client_script_result=$?\n    echo \"+++++ client_log +++++\" \u003e\u003e ${log_file}\n    echo \"${client_log}\" \u003e\u003e ${log_file}\n    if [ ${client_script_result} -ne 0 ]; then\n      echo \"${prefix},NG\" \u003e\u003e ${result_file}\n    else\n      echo \"${prefix},OK\" \u003e\u003e ${result_file}\n    fi\n  fi\n  echo \"---------------------\" \u003e\u003e ${log_file}\ndone\n"
+            }
+        ],
+        "test_commands": [
+            {
+                "id": 1,
+                "service_name": "ping",
+                "server_script_template": "#!/bin/bash\n# do nothing\n",
+                "client_script_template": "#!/bin/bash\nping -c 4 {{.DestinationPort.Ipv4Address.String}}\n{{if eq .Accessibility true}}\nif [ $? -eq 0 ]; then\n  exit 0\nelse\n  exit 1\nfi\n{{else}}\nif [ $? -eq 0 ]; then\n  exit 1\nelse\n  exit 0\nfi\n{{end}}\n"
+            },
+            {
+                "id": 2,
+                "service_name": "ssh",
+                "server_script_template": "#!/bin/bash\nservice sshd start\n",
+                "client_script_template": "#!/bin/bash\nnc -v -z -w 1 {{.DestinationPort.Ipv4Address.String}} 22\n{{if eq .Accessibility true}}\nif [ $? -eq 0 ]; then\n  exit 0\nelse\n  exit 1\nfi\n{{else}}\nif [ $? -eq 0 ]; then\n  exit 1\nelse\n  exit 0\nfi\n{{end}}\n"
+            },
+            {
+                "id": 3,
+                "service_name": "http",
+                "server_script_template": "#!/bin/bash\nservice httpd start\n",
+                "client_script_template": "#!/bin/bash\ncurl http://{{.DestinationPort.Ipv4Address.String}}/\n{{if eq .Accessibility true}}\nif [ $? -eq 0 ]; then\n  exit 0\nelse\n  exit 1\nfi\n{{else}}\nif [ $? -eq 0 ]; then\n  exit 1\nelse\n  exit 0\nfi\n{{end}}\n"
+            },
+            {
+                "id": 4,
+                "service_name": "https",
+                "server_script_template": "#!/bin/bash\nservice httpd start\n",
+                "client_script_template": "#!/bin/bash\ncurl --insecure https://{{.DestinationPort.Ipv4Address.String}}/\n{{if eq .Accessibility true}}\nif [ $? -eq 0 ]; then\n  exit 0\nelse\n  exit 1\nfi\n{{else}}\nif [ $? -eq 0 ]; then\n  exit 1\nelse\n  exit 0\nfi\n{{end}}\n"
+            }
+        ],
+        "test_patterns": [
+            {
+                "id": 1,
+                "test_command_id": 1,
+                "test_command": null,
+                "test_case_id": 1,
+                "test_case": null
+            },
+            {
+                "id": 2,
+                "test_command_id": 2,
+                "test_command": null,
+                "test_case_id": 1,
+                "test_case": null
+            },
+            {
+                "id": 3,
+                "test_command_id": 3,
+                "test_command": null,
+                "test_case_id": 1,
+                "test_case": null
+            },
+            {
+                "id": 4,
+                "test_command_id": 4,
+                "test_command": null,
+                "test_case_id": 1,
+                "test_case": null
+            }
+        ]
     }
 }
