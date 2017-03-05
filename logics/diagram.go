@@ -3,7 +3,9 @@ package logics
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"github.com/qb0C80aE/clay/models"
+	loamLogics "github.com/qb0C80aE/loam/logics"
+	loamModels "github.com/qb0C80aE/loam/models"
+	"github.com/qb0C80aE/pottery/models"
 )
 
 const diagramImageRoot string = "/ui/files/images/diagram"
@@ -30,26 +32,31 @@ var virtualNodeIconPaths = map[int]string{
 
 var segmentIconPath = fmt.Sprintf("%s/%s", diagramImageRoot, "segment.png")
 
-func GetPhysicalDiagram(db *gorm.DB, _ string, queryFields string) (interface{}, error) {
+type PhysicalDiagramLogic struct {
+}
 
+type LogicalDiagramLogic struct {
+}
+
+func (_ *PhysicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields string) (interface{}, error) {
 	diagram := &models.Diagram{}
 
-	nodes := []*models.Node{}
+	nodes := []*loamModels.Node{}
 	if err := db.Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
 		return nil, err
 	}
 
-	nodeMap := make(map[int]*models.Node)
+	nodeMap := make(map[int]*loamModels.Node)
 	for _, node := range nodes {
 		nodeMap[node.ID] = node
 	}
 
-	ports := []*models.Port{}
+	ports := []*loamModels.Port{}
 	if err := db.Select(queryFields).Find(&ports).Error; err != nil {
 		return nil, err
 	}
 
-	portMap := make(map[int]*models.Port)
+	portMap := make(map[int]*loamModels.Port)
 	for _, port := range ports {
 		portMap[port.ID] = port
 	}
@@ -96,34 +103,56 @@ func GetPhysicalDiagram(db *gorm.DB, _ string, queryFields string) (interface{},
 	}
 
 	return diagram, nil
-
 }
 
-func GetLogicalDiagram(db *gorm.DB, _ string, queryFields string) (interface{}, error) {
+func (_ *PhysicalDiagramLogic) GetMulti(db *gorm.DB, queryFields string) ([]interface{}, error) {
+	return nil, nil
+}
 
-	nodePvs := []*models.NodePv{}
+func (_ *PhysicalDiagramLogic) Create(db *gorm.DB, data interface{}) (interface{}, error) {
+	return nil, nil
+}
+
+func (_ *PhysicalDiagramLogic) Update(db *gorm.DB, id string, data interface{}) (interface{}, error) {
+	return nil, nil
+}
+
+func (_ *PhysicalDiagramLogic) Delete(db *gorm.DB, id string) error {
+	return nil
+}
+
+func (_ *PhysicalDiagramLogic) Patch(_ *gorm.DB, _ string, _ string) (interface{}, error) {
+	return nil, nil
+}
+
+func (_ *PhysicalDiagramLogic) Options(db *gorm.DB) error {
+	return nil
+}
+
+func (_ *LogicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields string) (interface{}, error) {
+	nodePvs := []*loamModels.NodePv{}
 	if err := db.Select(queryFields).Find(&nodePvs).Error; err != nil {
 		return nil, err
 	}
 
-	nodeTypes := []*models.NodeType{}
+	nodeTypes := []*loamModels.NodeType{}
 	if err := db.Select(queryFields).Find(&nodeTypes).Error; err != nil {
 		return nil, err
 	}
 
-	nodes := []*models.Node{}
+	nodes := []*loamModels.Node{}
 	if err := db.Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
 		return nil, err
 	}
 
-	ports := []*models.Port{}
+	ports := []*loamModels.Port{}
 	if err := db.Select(queryFields).Find(&ports).Error; err != nil {
 		return nil, err
 	}
 
-	nodeMap := make(map[int]*models.Node)
-	portMap := make(map[int]*models.Port)
-	consumedPortMap := make(map[int]*models.Port)
+	nodeMap := make(map[int]*loamModels.Node)
+	portMap := make(map[int]*loamModels.Port)
+	consumedPortMap := make(map[int]*loamModels.Port)
 
 	for _, node := range nodes {
 		nodeMap[node.ID] = node
@@ -132,7 +161,7 @@ func GetLogicalDiagram(db *gorm.DB, _ string, queryFields string) (interface{}, 
 		portMap[port.ID] = port
 	}
 
-	segments := createSegments(nodeMap, portMap, consumedPortMap)
+	segments := loamLogics.GenerateSegments(nodeMap, portMap, consumedPortMap)
 
 	diagram := &models.Diagram{}
 
@@ -184,5 +213,34 @@ func GetLogicalDiagram(db *gorm.DB, _ string, queryFields string) (interface{}, 
 	}
 
 	return diagram, nil
+}
 
+func (_ *LogicalDiagramLogic) GetMulti(db *gorm.DB, queryFields string) ([]interface{}, error) {
+	return nil, nil
+}
+
+func (_ *LogicalDiagramLogic) Create(db *gorm.DB, data interface{}) (interface{}, error) {
+	return nil, nil
+}
+
+func (_ *LogicalDiagramLogic) Update(db *gorm.DB, id string, data interface{}) (interface{}, error) {
+	return nil, nil
+}
+
+func (_ *LogicalDiagramLogic) Delete(db *gorm.DB, id string) error {
+	return nil
+}
+
+func (_ *LogicalDiagramLogic) Patch(_ *gorm.DB, _ string, _ string) (interface{}, error) {
+	return nil, nil
+}
+
+func (_ *LogicalDiagramLogic) Options(db *gorm.DB) error {
+	return nil
+}
+
+var PhysicalDiagramLogicInstance = &PhysicalDiagramLogic{}
+var LogicalDiagramLogicInstance = &LogicalDiagramLogic{}
+
+func init() {
 }

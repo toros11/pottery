@@ -30,3 +30,6 @@ var DiagramNodeModel = &DiagramNode{}
 var DiagramInterfaceModel = &DiagramInterface{}
 var DiagramMetaModel = &DiagramMeta{}
 var DiagramLinkModel = &DiagramLink{}
+
+func init() {
+}
