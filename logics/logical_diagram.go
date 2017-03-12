@@ -42,7 +42,7 @@ func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, _ url.Values
 	}
 
 	nodes := []*loamModels.Node{}
-	if err := db.Preload("NodeExtraAttributes").Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
+	if err := db.Preload("NodeExtraAttributes").Preload("Ports").Preload("Ports.Vlans").Select(queryFields).Find(&nodes).Error; err != nil {
 		return nil, err
 	}
 
