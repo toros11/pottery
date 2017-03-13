@@ -69,14 +69,11 @@
 		</div>
 	</div>
 	<div class="col-xs-4" id="edit_panel"></div>
-	<div class="alert alert-info" id="alert_node_add">
-		<button class="close" data-dismiss="alert" type="button">×</button> The node has been registered successfully.
+	<div class="alert alert-info" id="alert_info">
+		<button class="close" data-dismiss="alert" type="button">×</button> <div id="information_message"></div>
 	</div>
-	<div class="alert alert-info" id="alert_node_update">
-		<button class="close" data-dismiss="alert" type="button">×</button> The node has been updates successfuly.
-	</div>
-	<div class="alert alert-info" id="alert_node_delete">
-		<button class="close" data-dismiss="alert" type="button">×</button> The node was deleted successfully.
+	<div class="alert alert-danger" id="alert_error">
+		<button class="close" data-dismiss="alert" type="button">×</button> <div id="error_message"></div>
 	</div>
 </div>
 <script language="javascript">
@@ -256,25 +253,25 @@
 		}
 
 		function postNode(nodeObject) {
-			return $.parseJSON($.ajax({
+			return $.ajax({
 				type: 'POST',
 				url: API_PREFIX + '/nodes',
 				dataType: 'json',
 				contentType: 'application/json',
 				data: JSON.stringify(nodeObject),
 				async: false
-			}).responseText);
+			});
 		}
 
 		function putNode(nodeId, nodeObject) {
-			return $.parseJSON($.ajax({
+			return $.ajax({
 				type: 'PUT',
 				url: API_PREFIX + '/nodes/' + nodeId,
 				dataType: 'json',
 				contentType: 'application/json',
 				data: JSON.stringify(nodeObject),
 				async: false
-			}).responseText);
+			});
 		}
 
 		function deleteNode(nodeId) {
@@ -564,51 +561,86 @@
 		});
 
 		$('#edit_panel').on('click', '#submit_update_node_btn', function() {
-
-			var editNodeId = $('#edit_node_id').val();
-			var deletedPortIds = getDeletedPortIds();
-
-			for (var i = 0; i < deletedPortIds.length; i = i + 1) {
-				deletePort(deletedPortIds[i]);
+			if (!confirm("Are you sure to update?")) {
+				return;
 			}
 
-			putNode(editNodeId, getEditNodeObject());
+			var editNodeId = $('#edit_node_id').val();
 
-			$('#alert_node_update').fadeIn(500).delay(2000).fadeOut(1000);
+			response = putNode(editNodeId, getEditNodeObject());
 
-			$("#edit_panel").children().remove();
-			onLoad();
+			if (response.status == 200) {
+				var deletedPortIds = getDeletedPortIds();
+				for (var i = 0; i < deletedPortIds.length; i = i + 1) {
+					response = deletePort(deletedPortIds[i]);
+					if (response.status != 204) {
+						$("#error_message").text($.parseJSON(response.responseText).error)
+						$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
+						return
+					}
+				}
 
+				$("#information_message").text("The node has been updates successfuly.")
+				$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
+				$("#edit_panel").children().remove();
+				onLoad();
+			} else {
+				$("#error_message").text($.parseJSON(response.responseText).error)
+				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
+			}
 		});
 
 		$('#edit_panel').on('click', '#submit_add_node_btn', function() {
+			if (!confirm("Are you sure to register?")) {
+				return;
+			}
 
-			postNode(getEditNodeObject());
+			response = postNode(getEditNodeObject());
 
-			$('#alert_node_add').fadeIn(500).delay(2000).fadeOut(1000);
-
-			$("#edit_panel").children().remove();
-			onLoad();
-
+			if (response.status == 201) {
+				$("#information_message").text("The node has been registered successfully.")
+				$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
+				$("#edit_panel").children().remove();
+				onLoad();
+			} else {
+				$("#error_message").text($.parseJSON(response.responseText).error)
+				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
+			}
 		});
 
 		$('#delete_node_btn').on('click', function() {
+			if (!confirm("Are you sure to delete?")) {
+				return;
+			}
+
 			var nodeId = $('#nodes').val();
 
-			deleteNode(nodeId);
+			response = deleteNode(nodeId);
 
-			$('#alert_node_delete').fadeIn(500).delay(2000).fadeOut(1000);
-
-			$("#edit_panel").children().remove();
-			onLoad();
-
+			if (response.status == 204) {
+				$("#information_message").text("The node was deleted successfully.")
+				$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
+				$("#edit_panel").children().remove();
+				onLoad();
+			} else {
+				$("#error_message").text($.parseJSON(response.responseText).error)
+				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
+			}
 		});
 
 		$('#edit_panel').on('click', '#cancel_add_node_btn', function() {
+			if (!confirm("Are you sure to cancel?")) {
+				return;
+			}
+
 			$("#edit_panel").children().remove();
 		});
 
 		$('#edit_panel').on('click', '#cancel_update_node_btn', function() {
+			if (!confirm("Are you sure to cancel?")) {
+				return;
+			}
+
 			$("#edit_panel").children().remove();
 		});
 
