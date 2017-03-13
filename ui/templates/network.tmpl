@@ -1,7 +1,7 @@
 {{template "header" .}}
 {{template "navbar" .}}
 <div class="row">
-	<div class="col-xs-3">
+	<div class="col-xs-4">
 		<div class="row">
 			<div class="col-xs-12">
 				<h5>
@@ -11,9 +11,9 @@
 					<select class="form-control" id="nodes">
 					</select>
 					<span class="input-group-btn">
-						<button class="btn btn-default" id="edit_node_btn" type="button">&gt;</button>
-						<button class="btn btn-default" id="new_node_btn" type="button">+</button>
-						<button class="btn btn-default" id="delete_node_btn" type="button">-</button>
+						<button class="btn btn-default" id="edit_node_btn" type="button">Upd</button>
+						<button class="btn btn-default" id="delete_node_btn" type="button">Del</button>
+						<button class="btn btn-default" id="new_node_btn" type="button">Add</button>
 					</span>
 				</div>
 			</div>
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-xs-4" id="edit_panel"></div>
+	<div class="col-xs-7" id="edit_panel"></div>
 	<div class="alert alert-info" id="alert_info">
 		<button class="close" data-dismiss="alert" type="button">×</button> <div id="information_message"></div>
 	</div>
@@ -97,7 +97,7 @@
 			'                  <div class="col-xs-12">' +
 			'                    <div><input type="hidden" id="edit_node_id"></div>' +
 			'                    <h6>Node name</h6>' +
-			'                    <input id="edit_node_name" type="text" name="edit_node_name" class="form-control">' +
+			'                    <input id="edit_node_name" type="text" name="edit_node_name" placeholder="node name like router1" class="form-control">' +
 			'                  </div>' +
 			'                </div>' +
 			'                <div class="row">' +
@@ -157,10 +157,10 @@
 			'                            <div class="row">' +
 			'                              <div class="col-xs-3">' +
 			'                                <input type="hidden" id="edit_port_id_{@port_sequence}" name="edit_port_id" value="0">' +
-			'                                <input type="text" id="edit_port_number_{@port_sequence}" name="edit_port_number" placeholder="0" class="form-control">' +
+			'                                <input type="text" id="edit_port_number_{@port_sequence}" name="edit_port_number" placeholder="port number like 1" class="form-control">' +
 			'                              </div>' +
 			'                              <div class="col-xs-9">' +
-			'                                <input type="text" id="edit_port_name_{@port_sequence}" name="edit_port_name" placeholder="name" class="form-control">' +
+			'                                <input type="text" id="edit_port_name_{@port_sequence}" name="edit_port_name" placeholder="port name like eth0" class="form-control">' +
 			'                              </div>' +
 			'                            </div>' +
 			'                            <div class="row">' +
@@ -175,15 +175,15 @@
 			'                            </div>' +
 			'                            <div class="row">' +
 			'                              <div class="col-xs-12">' +
-			'                                <input type="text" id="edit_port_mac_address_{@port_sequence}" name="edit_port_mac_address" placeholder="00:00:00:00:00:00" value="" class="form-control">' +
+			'                                <input type="text" id="edit_port_mac_address_{@port_sequence}" name="edit_port_mac_address" placeholder="mac address like 10:54:ff:00:00:01" value="" class="form-control">' +
 			'                              </div>' +
 			'                            </div>' +
 			'                            <div class="row">' +
 			'                              <div class="col-xs-9">' +
-			'                                <input type="text" id="edit_port_ipv4_address_{@port_sequence}" name="edit_port_ipv4_address" placeholder="0.0.0.0" value = "" class="form-control">' +
+			'                                <input type="text" id="edit_port_ipv4_address_{@port_sequence}" name="edit_port_ipv4_address" placeholder="ipv4 address like 192.168.0.1" value = "" class="form-control">' +
 			'                              </div>' +
 			'                              <div class="col-xs-3">' +
-			'                                <input type="text" id="edit_port_ipv4_prefix_{@port_sequence}" name="edit_port_ipv4_prefix" placeholder="0" value = "0" class="form-control">' +
+			'                                <input type="text" id="edit_port_ipv4_prefix_{@port_sequence}" name="edit_port_ipv4_prefix" placeholder="prefix like 24" value = "" class="form-control">' +
 			'                              </div>' +
 			'                            </div>' +
 			'                            <div class="row">' +
@@ -329,7 +329,11 @@
 
 		function convertSqlNullObject(nullValue, typeString, value) {
 			result = {};
-			result[typeString] = value;
+			if (typeString == "Int64") {
+				result[typeString] = parseInt(value)
+			} else {
+				result[typeString] = value;
+			}
 			if (nullValue == value) {
 				result["Valid"] = false;
 			}
@@ -374,11 +378,11 @@
 					node_id: parseInt(editNodeId),
 					name: editPortNames[i],
 					layer: parseInt(editPortLayers[i]),
-					destination_port_id: convertSqlNullObject(0, "Int64", parseInt(editPortDestinationPortIds[i])),
+					destination_port_id: convertSqlNullObject(0, "Int64", editPortDestinationPortIds[i]),
 					destination_port: null,
 					mac_address: convertSqlNullObject("", "String", editPortMacAddresses[i]),
 					ipv4_address: convertSqlNullObject("", "String", editPortIpv4Addresses[i]),
-					ipv4_prefix: convertSqlNullObject(0, "Int64", parseInt(editPortIpv4Prefixes[i])),
+					ipv4_prefix: convertSqlNullObject(0, "Int64", editPortIpv4Prefixes[i]),
 					remark: convertSqlNullObject("", "String", editPortRemarks[i]),
 				}
 			}
