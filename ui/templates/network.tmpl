@@ -100,7 +100,7 @@
 			'                  <div class="col-xs-12">' +
 			'                    <div><input type="hidden" id="edit_node_id"></div>' +
 			'                    <h6>Node name</h6>' +
-			'                    <input id="edit_node_name" type="text" name="edit_node_name" class="form-control" {@readonly}>' +
+			'                    <input id="edit_node_name" type="text" name="edit_node_name" class="form-control">' +
 			'                  </div>' +
 			'                </div>' +
 			'                <div class="row">' +
@@ -158,14 +158,22 @@
 			'                        <div class="row">' +
 			'                          <div class="col-xs-12">' +
 			'                            <div class="row">' +
-			'                              <div class="col-xs-12">' +
+			'                              <div class="col-xs-3">' +
 			'                                <input type="hidden" id="edit_port_id_{@port_sequence}" name="edit_port_id" value="0">' +
+			'                                <input type="text" id="edit_port_number_{@port_sequence}" name="edit_port_number" placeholder="0" class="form-control">' +
+			'                              </div>' +
+			'                              <div class="col-xs-9">' +
 			'                                <input type="text" id="edit_port_name_{@port_sequence}" name="edit_port_name" placeholder="name" class="form-control">' +
 			'                              </div>' +
 			'                            </div>' +
 			'                            <div class="row">' +
 			'                              <div class="col-xs-12">' +
 			'                                <select class="form-control" id="edit_port_destination_port_{@port_sequence}" name="edit_port_destination_port"></select>' +
+			'                              </div>' +
+			'                            </div>' +
+			'                            <div class="row">' +
+			'                              <div class="col-xs-12">' +
+			'                                <select class="form-control" id="edit_port_layer_{@port_sequence}" name="edit_port_layer"></select>' +
 			'                              </div>' +
 			'                            </div>' +
 			'                            <div class="row">' +
@@ -179,6 +187,11 @@
 			'                              </div>' +
 			'                              <div class="col-xs-3">' +
 			'                                <input type="text" id="edit_port_ipv4_prefix_{@port_sequence}" name="edit_port_ipv4_prefix" placeholder="0" value = "0" class="form-control">' +
+			'                              </div>' +
+			'                            </div>' +
+			'                            <div class="row">' +
+			'                              <div class="col-xs-12">' +
+			'                                <input type="text" id="edit_port_remark_{@port_sequence}" name="edit_port_remark" placeholder="remark" value="" class="form-control">' +
 			'                                <br>' +
 			'                              </div>' +
 			'                            </div>' +
@@ -187,7 +200,6 @@
 
 		const editNodeTemplateParametersForAdd = {
 			"title": "Node registration",
-			"readonly": "",
 			"submit_button_id": "submit_add_node_btn",
 			"submit_button_label": "Register",
 			"cancel_button_id": "cancel_add_node_btn",
@@ -196,7 +208,6 @@
 
 		const editNodeTemplateParametersForUpdate = {
 			"title": "Node update",
-			"readonly": "readonly",
 			"submit_button_id": "submit_update_node_btn",
 			"submit_button_label": "Update",
 			"cancel_button_id": "cancel_update_node_btn",
@@ -351,22 +362,27 @@
 			var result = []
 			var editNodeId = $('#edit_node_id').val();
 			var editPortIds = getEditElementArray('edit_panel', 'edit_port_id');
+			var editPortNumbers = getEditElementArray('edit_panel', 'edit_port_number');
 			var editPortNames = getEditElementArray('edit_panel', 'edit_port_name');
+			var editPortLayers = getEditElementArray('edit_panel', 'edit_port_layer');
 			var editPortDestinationPortIds = getEditElementArray('edit_panel', 'edit_port_destination_port');
 			var editPortMacAddresses = getEditElementArray('edit_panel', 'edit_port_mac_address');
 			var editPortIpv4Addresses = getEditElementArray('edit_panel', 'edit_port_ipv4_address');
 			var editPortIpv4Prefixes = getEditElementArray('edit_panel', 'edit_port_ipv4_prefix');
+			var editPortRemarks = getEditElementArray('edit_panel', 'edit_port_remark');
 			for (var i = 0; i < editPortDestinationPortIds.length; i = i + 1) {
 				result[i] = {
 					id: parseInt(editPortIds[i]),
+					number: parseInt(editPortNumbers[i]),
 					node_id: parseInt(editNodeId),
 					name: editPortNames[i],
+					layer: parseInt(editPortLayers[i]),
 					destination_port_id: convertSqlNullObject(0, "Int64", parseInt(editPortDestinationPortIds[i])),
 					destination_port: null,
 					mac_address: convertSqlNullObject("", "String", editPortMacAddresses[i]),
 					ipv4_address: convertSqlNullObject("", "String", editPortIpv4Addresses[i]),
 					ipv4_prefix: convertSqlNullObject(0, "Int64", parseInt(editPortIpv4Prefixes[i])),
-					remark: convertSqlNullObject("", "String", "")
+					remark: convertSqlNullObject("", "String", editPortRemarks[i]),
 				}
 			}
 			return result;
@@ -399,12 +415,12 @@
 					if (port.destination_port_id.Valid) {
 						destination_port = findPort(port.destination_port_id.Int64)
 						destination_port_node = findNode(destination_port.node_id)
-						$("#ports").append("&nbsp;&nbsp;&nbsp;[" + (i + 1) + "]&nbsp;" + port.name + "&nbsp-&nbsp;" + destination_port_node.name + "&nbsp;" + destination_port.name + "<br>")
+						$("#ports").append("&nbsp;&nbsp;&nbsp;[" + port.number + "]&nbsp;" + port.name + "&nbsp-&nbsp;" + destination_port_node.name + "&nbsp;" + destination_port.name + "<br>")
 						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAC&nbsp;Address:&nbsp;&nbsp;" + port.mac_address.String + "<br>")
 						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv4&nbsp;Address:&nbsp;&nbsp;" + port.ipv4_address.String + "/" + port.ipv4_prefix.Int64 + "<br>")
 					}
 					else {
-						$("#ports").append("&nbsp;&nbsp;&nbsp;[" + (i + 1) + "]&nbsp;" + port.name + "&nbsp-&nbsp;Unplugged<br>")
+						$("#ports").append("&nbsp;&nbsp;&nbsp;[" + port.number + "]&nbsp;" + port.name + "&nbsp-&nbsp;Unplugged<br>")
 						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAC&nbsp;Address:&nbsp;&nbsp;" + port.mac_address.String + "<br>")
 						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv4&nbsp;Address:&nbsp;&nbsp;" + port.ipv4_address.String + "/" + port.ipv4_prefix.Int64 + "<br>")
 					}
@@ -461,10 +477,17 @@
 				};
 				$("#edit_port").append(buildTemplate(editPortTemplate, editPortTemplateParameters));
 				$("#edit_port_id_" + i).val(port.id);
+				$("#edit_port_number_" + i).val(port.number);
 				$("#edit_port_name_" + i).val(port.name);
 				$("#edit_port_mac_address_" + i).val(port.mac_address.String);
 				$("#edit_port_ipv4_address_" + i).val(port.ipv4_address.String);
 				$("#edit_port_ipv4_prefix_" + i).val(port.ipv4_prefix.Int64);
+				$("#edit_port_remark_" + i).val(port.remark.String);
+
+                for (var j = 1; j <= 3; j = j + 1) {
+                    $("#edit_port_layer_" + i).append($('<option>').val(j).text('Layer ' + j));
+                }
+                $("#edit_port_layer_" + i).val(port.layer)
 
 				$("#edit_port_destination_port_" + i).append($('<option>').val(0).text('Unplugged'));
 				for (var j = 0; j < nodes.length; j = j + 1) {
@@ -499,6 +522,10 @@
 				"port_sequence": newPortNumber
 			};
 			$("#edit_port").append(buildTemplate(editPortTemplate, editPortTemplateParameters));
+
+            for (var i = 1; i <= 3; i = i + 1) {
+                $("#edit_port_layer_" + newPortNumber).append($('<option>').val(i).text('Layer ' + i));
+            }
 
 			$("#edit_port_destination_port_" + newPortNumber).append($('<option>').val(0).text('Unplugged'));
 			for (var i = 0; i < nodes.length; i = i + 1) {
