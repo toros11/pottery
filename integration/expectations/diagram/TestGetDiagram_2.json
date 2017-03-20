@@ -1,0 +1,80 @@
+{
+  "nodes": [
+    {
+      "name": "router1",
+      "icon": "/ui/files/images/diagram/router.png"
+    },
+    {
+      "name": "firewall1",
+      "icon": "/ui/files/images/diagram/firewall.png"
+    },
+    {
+      "name": "server1",
+      "icon": "/ui/files/images/diagram/server_v.png"
+    },
+    {
+      "name": "server2",
+      "icon": "/ui/files/images/diagram/server_v.png"
+    },
+    {
+      "name": "[0]192.168.0.0/24",
+      "icon": "/ui/files/images/diagram/segment.png"
+    },
+    {
+      "name": "[1]192.168.1.0/24",
+      "icon": "/ui/files/images/diagram/segment.png"
+    }
+  ],
+  "links": [
+    {
+      "source": "[0]192.168.0.0/24",
+      "target": "router1",
+      "meta": {
+        "interface": {
+          "source": "",
+          "target": "router1port0[00:00:00:00:00:01](192.168.0.1/24)"
+        }
+      }
+    },
+    {
+      "source": "[0]192.168.0.0/24",
+      "target": "firewall1",
+      "meta": {
+        "interface": {
+          "source": "",
+          "target": "firewll1port0[00:00:00:00:01:01](192.168.0.2/24)"
+        }
+      }
+    },
+    {
+      "source": "[1]192.168.1.0/24",
+      "target": "firewall1",
+      "meta": {
+        "interface": {
+          "source": "",
+          "target": "firewll1port1[00:00:00:00:01:02](192.168.1.1/24)"
+        }
+      }
+    },
+    {
+      "source": "[1]192.168.1.0/24",
+      "target": "server1",
+      "meta": {
+        "interface": {
+          "source": "",
+          "target": "server1port0[00:00:00:00:02:01](192.168.1.2/24)"
+        }
+      }
+    },
+    {
+      "source": "[1]192.168.1.0/24",
+      "target": "server2",
+      "meta": {
+        "interface": {
+          "source": "",
+          "target": "server2port0[00:00:00:00:03:01](192.168.1.3/24)"
+        }
+      }
+    }
+  ]
+}
