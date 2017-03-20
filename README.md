@@ -1,4 +1,6 @@
-# Summary
+# Pottery
+
+[![Build Status](https://travis-ci.org/qb0C80aE/pottery.svg?branch=develop)](https://travis-ci.org/qb0C80aE/pottery)
 
 Pottery is a simple GUI module works with [Loam](https://github.com/qb0C80aE/loam) on [Clay](https://github.com/qb0C80aE/clay).
 It provides graphical network diagram views based on clay datastore.
