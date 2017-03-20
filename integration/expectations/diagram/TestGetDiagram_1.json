@@ -1,0 +1,66 @@
+{
+  "nodes": [
+    {
+      "name": "router1",
+      "icon": "/ui/files/images/diagram/router.png"
+    },
+    {
+      "name": "firewall1",
+      "icon": "/ui/files/images/diagram/firewall.png"
+    },
+    {
+      "name": "l2sw1",
+      "icon": "/ui/files/images/diagram/l2switch_v.png"
+    },
+    {
+      "name": "server1",
+      "icon": "/ui/files/images/diagram/server_v.png"
+    },
+    {
+      "name": "server2",
+      "icon": "/ui/files/images/diagram/server_v.png"
+    }
+  ],
+  "links": [
+    {
+      "source": "router1",
+      "target": "firewall1",
+      "meta": {
+        "interface": {
+          "source": "router1port0",
+          "target": "firewll1port0"
+        }
+      }
+    },
+    {
+      "source": "firewall1",
+      "target": "l2sw1",
+      "meta": {
+        "interface": {
+          "source": "firewll1port1",
+          "target": "l2sw1port0"
+        }
+      }
+    },
+    {
+      "source": "l2sw1",
+      "target": "server1",
+      "meta": {
+        "interface": {
+          "source": "l2sw1port1",
+          "target": "server1port0"
+        }
+      }
+    },
+    {
+      "source": "l2sw1",
+      "target": "server2",
+      "meta": {
+        "interface": {
+          "source": "l2sw1port2",
+          "target": "server2port0"
+        }
+      }
+    }
+  ]
+}
