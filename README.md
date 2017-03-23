@@ -5,13 +5,13 @@
 Pottery is a simple GUI module works with [Loam](https://github.com/qb0C80aE/loam) on [Clay](https://github.com/qb0C80aE/clay).
 It provides graphical network diagram views based on clay datastore.
 
-### Sample UI - network design
+### UI - network design
 ![Network design](./images/sample1.png)
 
-### Sample UI - physial diagram from the system model store
+### UI - physial diagram from the system model store
 ![Physical diagram](./images/sample2.png)
 
-### Sample UI - logical diagram from the system model store
+### UI - logical diagram from the system model store
 ![Logical diagram](./images/sample3.png)
 
 # How to build and run
@@ -49,3 +49,4 @@ GET    /<version>/diagrams/logical
 # Thanks
 
 * Pottery uses https://github.com/codeout/inet-henge
+* Pottery uses http://www.quackit.com/html/templates/download/bootstrap/portal-1/
