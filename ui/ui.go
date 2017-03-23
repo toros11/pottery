@@ -13,6 +13,10 @@ func HookSubmodules() {
 type RouterInitializer struct {
 }
 
+type PageTemplate struct {
+	Name string
+}
+
 func (_ *RouterInitializer) InitializeEarly(r *gin.Engine) error {
 	r.Static("ui/files", "ui/files")
 	r.LoadHTMLGlob("ui/templates/*.tmpl")
@@ -20,13 +24,13 @@ func (_ *RouterInitializer) InitializeEarly(r *gin.Engine) error {
 	ui := r.Group("/ui")
 	{
 		ui.GET("/", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "index.tmpl", gin.H{"env": envMap})
+			c.HTML(http.StatusOK, "index.tmpl", gin.H{"env": envMap, "category": "home"})
 		})
 		ui.GET("/network", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "network.tmpl", gin.H{"env": envMap})
+			c.HTML(http.StatusOK, "network.tmpl", gin.H{"env": envMap, "category": "design"})
 		})
 		ui.GET("/diagram", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "diagram.tmpl", gin.H{"env": envMap})
+			c.HTML(http.StatusOK, "diagram.tmpl", gin.H{"env": envMap, "category": "design"})
 		})
 	}
 	return nil
