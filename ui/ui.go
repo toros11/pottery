@@ -79,6 +79,8 @@ func (_ *RouterInitializer) InitializeEarly(r *gin.Engine) error {
 	templateFileNames := []string{
 		fmt.Sprintf("%s/%s", templateBase, "diagram.tmpl"),
 		fmt.Sprintf("%s/%s", templateBase, "dialog.tmpl"),
+		fmt.Sprintf("%s/%s", templateBase, "environment.tmpl"),
+		fmt.Sprintf("%s/%s", templateBase, "environment_test_script.tmpl"),
 		fmt.Sprintf("%s/%s", templateBase, "footerpart.tmpl"),
 		fmt.Sprintf("%s/%s", templateBase, "headerpart.tmpl"),
 		fmt.Sprintf("%s/%s", templateBase, "index.tmpl"),
@@ -86,6 +88,7 @@ func (_ *RouterInitializer) InitializeEarly(r *gin.Engine) error {
 		fmt.Sprintf("%s/%s", templateBase, "network.tmpl"),
 		fmt.Sprintf("%s/%s", templateBase, "network_edit_node.tmpl"),
 		fmt.Sprintf("%s/%s", templateBase, "network_edit_port.tmpl"),
+		fmt.Sprintf("%s/%s", templateBase, "requirement.tmpl"),
 	}
 	htmlTemplate, err := loadTemplates(templateFileNames...)
 	if err != nil {
