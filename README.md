@@ -24,14 +24,6 @@ $ go build
 $ ./clay &
 ```
 
-## Environmental variables
-
-You can give the environmental variables to Clay.
-
-|Key         |Description                                                                      |Options    |Default        |
-|:-----------|:--------------------------------------------------------------------------------|:----------|:--------------|
-|ENDPOINT    |The host:port formed API address what this UI access                             |-          |${HOST}:${PORT}|
-
 # How to use
 
 ## Example diagram
