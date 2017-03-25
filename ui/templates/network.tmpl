@@ -1,81 +1,65 @@
-{{template "header" .}}
-{{template "navbar" .}}
-<div class="row">
-	<div class="col-xs-4">
-		<div class="row">
-			<div class="col-xs-12">
-				<h5>
-					Node
-				</h5>
-				<div class="input-group text-left">
-					<select class="form-control" id="nodes">
-					</select>
-					<span class="input-group-btn">
-						<button class="btn btn-default" id="edit_node_btn" type="button">Upd</button>
-						<button class="btn btn-default" id="delete_node_btn" type="button">Del</button>
-						<button class="btn btn-default" id="new_node_btn" type="button">Add</button>
-					</span>
+{{template "headerpart" .}}
+<!-- Left Column -->
+<div class="col-sm-4">
+	<!-- Node Information Panel -->
+	<div class="panel panel-default panel-custom" id="nodes_panel">
+		<!-- Node Information Panel Title -->
+		<div class="panel-heading">
+			<h1 class="panel-title"><span class="glyphicon glyphicon-hdd"></span> Nodes</h1>
+		</div><!-- /Node Information Panel Title -->
+		<!-- Node Information Panel Body -->
+		<div class="panel-body">
+			<!-- Node Selection -->
+			<div class="input-group text-left">
+				<select class="form-control" id="nodes">
+				</select>
+				<span class="input-group-btn">
+					<button class="btn btn-default" id="edit_node_btn" type="button"><span class="glyphicon glyphicon-edit"></span></button>
+					<button class="btn btn-default" id="new_node_btn" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+					<button class="btn btn-default" id="delete_node_btn" type="button"><span class="glyphicon glyphicon-minus"></span></button>
+				</span>
+			</div><!-- /Node Selection -->
+			<br>
+			<!-- Node Properties -->
+			<table class="table">
+				<tr>
+					<th width="50%"><span class="glyphicon glyphicon-file"></span> Property</th>
+					<th width="50%"><span class="glyphicon glyphicon-pencil"></span> Value</th>
+				</tr>
+				<tr>
+					<td>Node Name</td>
+					<td><span id="node_name"></span></td>
+				</tr>
+				<tr>
+					<td>Physical/Virtual</td>
+					<td><span id="node_pv"></span></td>
+				</tr>
+				<tr>
+					<td>Node Type</td>
+					<td><span id="node_type"></span></td>
+				</tr>
+			</table><!-- /Node Properties -->
+			<!-- Port-Destination Panel -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span> Port - Destination</h1>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-3">
-					&nbsp;
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="form-group">
-					<div class="row">
-						<div class="col-xs-12">
-							<h6>
-								Node name
-							</h6>
-							<div id="node_name">
-								&nbsp;&nbsp;&nbsp;
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-12">
-							<h6>
-								Physical/Virtual
-							</h6>
-							<div id="node_pv">
-								&nbsp;&nbsp;&nbsp;
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-12">
-							<h6>
-								Node type
-							</h6>
-							<div id="node_type">
-								&nbsp;&nbsp;&nbsp;
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-12">
-							<h6>
-								Port - Destination
-							</h6>
-							<div class="pre-scrollable" id="ports"></div>
-						</div>
+				<div class="panel-body">
+					<div class="pre-scrollable" id="ports">
 					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-xs-7" id="edit_panel"></div>
-	<div class="alert alert-info" id="alert_info">
-		<button class="close" data-dismiss="alert" type="button">×</button> <div id="information_message"></div>
-	</div>
-	<div class="alert alert-danger" id="alert_error">
-		<button class="close" data-dismiss="alert" type="button">×</button> <div id="error_message"></div>
-	</div>
-</div>
+			</div><!-- /Port-Destination Panel -->
+		</div><!-- /Node Information Panel Body -->
+	</div><!-- /Node Information Panel -->
+</div><!--/Left Column-->
+
+<!-- Right Column -->
+<div class="col-sm-8">
+	<!-- Node Edit Panel -->
+	<div class="panel panel-default panel-custom" id="edit_panel">
+	</div><!-- /Edit-Node Panel -->
+</div><!--/Right Column-->
+
 <script language="javascript">
 	(function($) {
 
@@ -85,130 +69,19 @@
 		var nodePvs = null;
 		var nodeTypes = null;
 
-		var physicalDiagramWindow = null;
-		var logicalDiagramWindow = null;
-
-		const editNodeTemplate = "" +
-			'          <div class="row">' +
-			'            <div class="col-xs-12">' +
-			'              <h5>{@title}</h5>' +
-			'              <div class="form-group">' +
-			'                <div class="row">' +
-			'                  <div class="col-xs-12">' +
-			'                    <div><input type="hidden" id="edit_node_id"></div>' +
-			'                    <h6>Node name</h6>' +
-			'                    <input id="edit_node_name" type="text" name="edit_node_name" placeholder="node name like router1" class="form-control">' +
-			'                  </div>' +
-			'                </div>' +
-			'                <div class="row">' +
-			'                  <div class="col-xs-12">' +
-			'                    <h6>Physical/Logical</h6>' +
-			'                    <select class="form-control" id="edit_node_pv"></select>' +
-			'                  </div>' +
-			'                </div>' +
-			'                <div class="row">' +
-			'                  <div class="col-xs-12">' +
-			'                    <h6>Node type</h6>' +
-			'                    <select class="form-control" id="edit_node_type"></select>' +
-			'                  </div>' +
-			'                </div>' +
-			'                <div class="row">' +
-			'                  <div class="col-xs-12">' +
-			'                    <div class="row">' +
-			'                      <div class="col-xs-12">' +
-			'                        <h6>Port - destination</h6>' +
-			'                      </div>' +
-			'                    </div>' +
-			'                  </div>' +
-			'                </div>' +
-			'                <div class="row pre-scrollable">' +
-			'                  <div class="col-xs-12">' +
-			'                    <div class="row">' +
-			'                      <div class="col-xs-12" id="edit_port">' +
-			'                      </div>' +
-			'                    </div>' +
-			'                    <div class="row">' +
-			'                      <div class="col-xs-12">' +
-			'                        <button id="edit_add_port_btn" type="button" class="btn btn-default">+</button>' +
-			'                        <button id="edit_delete_port_btn" type="button" class="btn btn-default">-</button>' +
-			'                        <br>' +
-			'                      </div>' +
-			'                    </div>' +
-			'                  </div>' +
-			'                </div>' +
-			'                <div class="row">' +
-			'                  <div class="col-xs-12">' +
-			'                    <div class="row">' +
-			'                      <div class="col-xs-12">' +
-			'                        <br>' +
-			'                        <button id="{@submit_button_id}" type="button" class="btn btn-info">{@submit_button_label}</button>' +
-			'                        <button id="{@cancel_button_id}" type="button" class="btn btn-info">{@cancel_button_label}</button>' +
-			'                      </div>' +
-			'                    </div>' +
-			'                  </div>' +
-			'                </div>' +
-			'              </div>' +
-			'            </div>' +
-			'          </div>';
-
-		const editPortTemplate = "" +
-			'                        <div class="row">' +
-			'                          <div class="col-xs-12">' +
-			'                            <div class="row">' +
-			'                              <div class="col-xs-3">' +
-			'                                <input type="hidden" id="edit_port_id_{@port_sequence}" name="edit_port_id" value="0">' +
-			'                                <input type="text" id="edit_port_number_{@port_sequence}" name="edit_port_number" placeholder="port number like 1" class="form-control">' +
-			'                              </div>' +
-			'                              <div class="col-xs-9">' +
-			'                                <input type="text" id="edit_port_name_{@port_sequence}" name="edit_port_name" placeholder="port name like eth0" class="form-control">' +
-			'                              </div>' +
-			'                            </div>' +
-			'                            <div class="row">' +
-			'                              <div class="col-xs-12">' +
-			'                                <select class="form-control" id="edit_port_destination_port_{@port_sequence}" name="edit_port_destination_port"></select>' +
-			'                              </div>' +
-			'                            </div>' +
-			'                            <div class="row">' +
-			'                              <div class="col-xs-12">' +
-			'                                <select class="form-control" id="edit_port_layer_{@port_sequence}" name="edit_port_layer"></select>' +
-			'                              </div>' +
-			'                            </div>' +
-			'                            <div class="row">' +
-			'                              <div class="col-xs-12">' +
-			'                                <input type="text" id="edit_port_mac_address_{@port_sequence}" name="edit_port_mac_address" placeholder="mac address like 10:54:ff:00:00:01" value="" class="form-control">' +
-			'                              </div>' +
-			'                            </div>' +
-			'                            <div class="row">' +
-			'                              <div class="col-xs-9">' +
-			'                                <input type="text" id="edit_port_ipv4_address_{@port_sequence}" name="edit_port_ipv4_address" placeholder="ipv4 address like 192.168.0.1" value = "" class="form-control">' +
-			'                              </div>' +
-			'                              <div class="col-xs-3">' +
-			'                                <input type="text" id="edit_port_ipv4_prefix_{@port_sequence}" name="edit_port_ipv4_prefix" placeholder="prefix like 24" value = "" class="form-control">' +
-			'                              </div>' +
-			'                            </div>' +
-			'                            <div class="row">' +
-			'                              <div class="col-xs-12">' +
-			'                                <input type="text" id="edit_port_remark_{@port_sequence}" name="edit_port_remark" placeholder="remark" value="" class="form-control">' +
-			'                                <br>' +
-			'                              </div>' +
-			'                            </div>' +
-			'                          </div>' +
-			'                        </div>';
+		const editNodeTemplate = `{{template "network_edit_node" .}}`;
+		const editPortTemplate = `{{template "network_edit_port" .}}`;
 
 		const editNodeTemplateParametersForAdd = {
 			"title": "Node registration",
 			"submit_button_id": "submit_add_node_btn",
-			"submit_button_label": "Register",
 			"cancel_button_id": "cancel_add_node_btn",
-			"cancel_button_label": "Cancel"
 		}
 
 		const editNodeTemplateParametersForUpdate = {
 			"title": "Node update",
 			"submit_button_id": "submit_update_node_btn",
-			"submit_button_label": "Update",
 			"cancel_button_id": "cancel_update_node_btn",
-			"cancel_button_label": "Cancel"
 		}
 
 		function buildTemplate(template, templateParameters) {
@@ -416,28 +289,27 @@
 					if (port.destination_port_id.Valid) {
 						destination_port = findPort(port.destination_port_id.Int64)
 						destination_port_node = findNode(destination_port.node_id)
-						$("#ports").append("&nbsp;&nbsp;&nbsp;[" + port.number + "]&nbsp;" + port.name + "&nbsp-&nbsp;" + destination_port_node.name + "&nbsp;" + destination_port.name + "<br>")
-						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAC&nbsp;Address:&nbsp;&nbsp;" + port.mac_address.String + "<br>")
-						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv4&nbsp;Address:&nbsp;&nbsp;" + port.ipv4_address.String + "/" + port.ipv4_prefix.Int64 + "<br>")
+						$("#ports").append('<div><table class="table table-bordered"><tr><td><table class="table table-condensed table-striped">' +
+							"<tr><th width=10%>#</th><th width=30%>Name</th><th width=30%>Node</th><th width=30%>Port</th></tr>" +
+							"<tr><td>" + port.number + "</td><td>" + port.name + "</td><td>" + destination_port_node.name + "</td><td>" + destination_port.name + "</td></tr>" +
+							"<tr><th colspan=4>Mac Address</th></tr>" +
+							"<tr><td colspan=4>" + port.mac_address.String + "&nbsp;</td></tr>" +
+							"<tr><th colspan=4>IP Address</th></tr>" +
+							"<tr><td colspan=4>" + port.ipv4_address.String + "/" + port.ipv4_prefix.Int64 + "&nbsp;</td></tr>" +
+							"</table></td></tr></table><hr></div>");
 					}
 					else {
-						$("#ports").append("&nbsp;&nbsp;&nbsp;[" + port.number + "]&nbsp;" + port.name + "&nbsp-&nbsp;Unplugged<br>")
-						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAC&nbsp;Address:&nbsp;&nbsp;" + port.mac_address.String + "<br>")
-						$("#ports").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IPv4&nbsp;Address:&nbsp;&nbsp;" + port.ipv4_address.String + "/" + port.ipv4_prefix.Int64 + "<br>")
+						$("#ports").append('<div><table class="table table-bordered"><tr><td><table class="table table-condensed table-striped">' +
+							"<tr><th width=10%>#</th><th width=30%>Name</th><th width=30%>Node</th><th width=30%>Port</th></tr>" +
+							"<tr><td>" + port.number + "</td><td>" + port.name + "</td><td>None</td><td>Unplugged</td></tr>" +
+							"<tr><th colspan=4>Mac Address</th></tr>" +
+							"<tr><td colspan=4>" + port.mac_address.String + "&nbsp;</td></tr>" +
+							"<tr><th colspan=4>IP Address</th></tr>" +
+							"<tr><td colspan=4>" + port.ipv4_address.String + "/" + port.ipv4_prefix.Int64 + "&nbsp;</td></tr>" +
+							"</table></td></tr></table><hr></div>");
 					}
 				}
 			}
-		}
-
-		function updateDiagramWindow() {
-			try {
-				physicalDiagramWindow.location.reload();
-			}
-			catch (err) {}
-			try {
-				logicalDiagramWindow.location.reload();
-			}
-			catch (err) {}
 		}
 
 		function onNodeChanged() {
@@ -448,75 +320,80 @@
 			loadNodePvs();
 			loadNodeTypes();
 			loadNodes();
+			$('#nodes_panel').fadeIn(150);
 			showNode(true);
-			updateDiagramWindow();
 		}
 
 		function onEditNode() {
-			$("#edit_panel").children().remove();
-			$("#edit_panel").html(prebuiltEditNodeTemplateForUpdate);
+			$('#edit_panel').fadeOut(150, function() {
+			   $('#edit_panel').children().remove();
+				 $('#edit_panel').html(prebuiltEditNodeTemplateForUpdate);
+				 for (var i = 0; i < nodePvs.length; i = i + 1) {
+	 				$("#edit_node_pv").append($('<option>').val(nodePvs[i].id).text(nodePvs[i].name));
+	 			}
 
-			for (var i = 0; i < nodePvs.length; i = i + 1) {
-				$("#edit_node_pv").append($('<option>').val(nodePvs[i].id).text(nodePvs[i].name));
-			}
+	 			for (var i = 0; i < nodeTypes.length; i = i + 1) {
+	 				$("#edit_node_type").append($('<option>').val(nodeTypes[i].id).text(nodeTypes[i].name));
+	 			}
 
-			for (var i = 0; i < nodeTypes.length; i = i + 1) {
-				$("#edit_node_type").append($('<option>').val(nodeTypes[i].id).text(nodeTypes[i].name));
-			}
+	 			node_id = $("#nodes").val();
+	 			node = findNode(node_id);
+	 			$("#edit_node_id").val(node.id);
+	 			$("#edit_node_name").val(node.name);
+	 			$("#edit_node_pv").val(node.node_pv.id);
+	 			$("#edit_node_type").val(node.node_type.id);
 
-			node_id = $("#nodes").val();
-			node = findNode(node_id);
-			$("#edit_node_id").val(node.id);
-			$("#edit_node_name").val(node.name);
-			$("#edit_node_pv").val(node.node_pv.id);
-			$("#edit_node_type").val(node.node_type.id);
+	 			for (var i = 0; i < node.ports.length; i = i + 1) {
+	 				port = node.ports[i];
+	 				editPortTemplateParameters = {
+	 					"port_sequence": i
+	 				};
+	 				$("#edit_port").append(buildTemplate(editPortTemplate, editPortTemplateParameters));
+	 				$("#edit_port_id_" + i).val(port.id);
+	 				$("#edit_port_number_" + i).val(port.number);
+	 				$("#edit_port_name_" + i).val(port.name);
+	 				$("#edit_port_mac_address_" + i).val(port.mac_address.String);
+	 				$("#edit_port_ipv4_address_" + i).val(port.ipv4_address.String);
+	 				$("#edit_port_ipv4_prefix_" + i).val(port.ipv4_prefix.Int64);
+	 				$("#edit_port_remark_" + i).val(port.remark.String);
 
-			for (var i = 0; i < node.ports.length; i = i + 1) {
-				port = node.ports[i];
-				editPortTemplateParameters = {
-					"port_sequence": i
-				};
-				$("#edit_port").append(buildTemplate(editPortTemplate, editPortTemplateParameters));
-				$("#edit_port_id_" + i).val(port.id);
-				$("#edit_port_number_" + i).val(port.number);
-				$("#edit_port_name_" + i).val(port.name);
-				$("#edit_port_mac_address_" + i).val(port.mac_address.String);
-				$("#edit_port_ipv4_address_" + i).val(port.ipv4_address.String);
-				$("#edit_port_ipv4_prefix_" + i).val(port.ipv4_prefix.Int64);
-				$("#edit_port_remark_" + i).val(port.remark.String);
+	         for (var j = 1; j <= 3; j = j + 1) {
+	             $("#edit_port_layer_" + i).append($('<option>').val(j).text('Layer ' + j));
+	         }
+	         $("#edit_port_layer_" + i).val(port.layer)
 
-                for (var j = 1; j <= 3; j = j + 1) {
-                    $("#edit_port_layer_" + i).append($('<option>').val(j).text('Layer ' + j));
-                }
-                $("#edit_port_layer_" + i).val(port.layer)
+	 				$("#edit_port_destination_port_" + i).append($('<option>').val(0).text('Unplugged'));
+	 				for (var j = 0; j < nodes.length; j = j + 1) {
+	 					for (var k = 0; k < nodes[j].ports.length; k = k + 1) {
+	 						$("#edit_port_destination_port_" + i).append($('<option>').val(nodes[j].ports[k].id).text(nodes[j].name + ' - ' + nodes[j].ports[k].name));
+	 					}
+	 				}
 
-				$("#edit_port_destination_port_" + i).append($('<option>').val(0).text('Unplugged'));
-				for (var j = 0; j < nodes.length; j = j + 1) {
-					for (var k = 0; k < nodes[j].ports.length; k = k + 1) {
-						$("#edit_port_destination_port_" + i).append($('<option>').val(nodes[j].ports[k].id).text(nodes[j].name + ' - ' + nodes[j].ports[k].name));
-					}
-				}
-
-				if (port.destination_port_id.Valid) {
-					$("#edit_port_destination_port_" + i).val(port.destination_port_id.Int64)
-				}
-			}
+	 				if (port.destination_port_id.Valid) {
+	 					$("#edit_port_destination_port_" + i).val(port.destination_port_id.Int64)
+	 				}
+	 			}
+				$('#edit_panel').fadeIn(150);
+			});
 		}
 
 		function onNewNode() {
-			$("#edit_panel").children().remove();
-			$("#edit_panel").html(prebuiltEditNodeTemplateForAdd);
-
-			for (var i = 0; i < nodePvs.length; i = i + 1) {
-				$("#edit_node_pv").append($('<option>').val(nodePvs[i].id).text(nodePvs[i].name));
-			}
-
-			for (var i = 0; i < nodeTypes.length; i = i + 1) {
-				$("#edit_node_type").append($('<option>').val(nodeTypes[i].id).text(nodeTypes[i].name));
-			}
+			$('#edit_panel').fadeOut(150, function() {
+			   $('#edit_panel').children().remove();
+				 $('#edit_panel').html(prebuiltEditNodeTemplateForAdd);
+				 for (var i = 0; i < nodePvs.length; i = i + 1) {
+					 $("#edit_node_pv").append($('<option>').val(nodePvs[i].id).text(nodePvs[i].name));
+				 }
+				 for (var i = 0; i < nodeTypes.length; i = i + 1) {
+					 $("#edit_node_type").append($('<option>').val(nodeTypes[i].id).text(nodeTypes[i].name));
+				 }
+				 $('#edit_panel').fadeIn(150);
+			});
 		}
 
 		function onAddPort() {
+			$("#edit_port").animate({scrollTop: $('#edit_port')[0].scrollHeight},'slow');
+
 			newPortNumber = getMaxPortSequence() + 1;
 
 			editPortTemplateParameters = {
@@ -524,9 +401,9 @@
 			};
 			$("#edit_port").append(buildTemplate(editPortTemplate, editPortTemplateParameters));
 
-            for (var i = 1; i <= 3; i = i + 1) {
-                $("#edit_port_layer_" + newPortNumber).append($('<option>').val(i).text('Layer ' + i));
-            }
+      for (var i = 1; i <= 3; i = i + 1) {
+          $("#edit_port_layer_" + newPortNumber).append($('<option>').val(i).text('Layer ' + i));
+      }
 
 			$("#edit_port_destination_port_" + newPortNumber).append($('<option>').val(0).text('Unplugged'));
 			for (var i = 0; i < nodes.length; i = i + 1) {
@@ -534,6 +411,7 @@
 					$("#edit_port_destination_port_" + newPortNumber).append($('<option>').val(nodes[i].ports[j].id).text(nodes[i].name + ' - ' + nodes[i].ports[j].name));
 				}
 			}
+
 		}
 
 		function onDeletePort() {
@@ -542,6 +420,7 @@
 				$('#edit_panel').append('<input type="hidden" name="edit_port_deleted_port_id" value="' + deletedPortId + '">')
 			}
 			$("#edit_port").children().last().remove();
+
 		}
 
 		$('#nodes').on('change', function() {
@@ -578,6 +457,7 @@
 				for (var i = 0; i < deletedPortIds.length; i = i + 1) {
 					response = deletePort(deletedPortIds[i]);
 					if (response.status != 204) {
+						$("html,body").animate({scrollTop:0},'slow');
 						$("#error_message").text($.parseJSON(response.responseText).error)
 						$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
 						return
@@ -585,10 +465,12 @@
 				}
 
 				$("#information_message").text("The node has been updates successfuly.")
+				$("html,body").animate({scrollTop:0},'slow');
 				$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
-				$("#edit_panel").children().remove();
+				$('#edit_panel').fadeOut(150);
 				onLoad();
 			} else {
+				$("html,body").animate({scrollTop:0},'slow');
 				$("#error_message").text($.parseJSON(response.responseText).error)
 				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
 			}
@@ -602,11 +484,13 @@
 			response = postNode(getEditNodeObject());
 
 			if (response.status == 201) {
+				$("html,body").animate({scrollTop:0},'slow');
 				$("#information_message").text("The node has been registered successfully.")
 				$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
-				$("#edit_panel").children().remove();
+				$('#edit_panel').fadeOut(150);
 				onLoad();
 			} else {
+				$("html,body").animate({scrollTop:0},'slow');
 				$("#error_message").text($.parseJSON(response.responseText).error)
 				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
 			}
@@ -622,11 +506,13 @@
 			response = deleteNode(nodeId);
 
 			if (response.status == 204) {
+				$("html,body").animate({scrollTop:0},'slow');
 				$("#information_message").text("The node was deleted successfully.")
 				$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
-				$("#edit_panel").children().remove();
+				$('#edit_panel').fadeOut(250)
 				onLoad();
 			} else {
+				$("html,body").animate({scrollTop:0},'slow');
 				$("#error_message").text($.parseJSON(response.responseText).error)
 				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
 			}
@@ -636,32 +522,20 @@
 			if (!confirm("Are you sure to cancel?")) {
 				return;
 			}
-
-			$("#edit_panel").children().remove();
+			$("html,body").animate({scrollTop:0},'slow');
+			$('#edit_panel').fadeOut(150);
 		});
 
 		$('#edit_panel').on('click', '#cancel_update_node_btn', function() {
 			if (!confirm("Are you sure to cancel?")) {
 				return;
 			}
-
-			$("#edit_panel").children().remove();
-		});
-
-		$('#physical_diagram_link').on('click', function() {
-			physicalDiagramWindow = window.open("/ui/diagram?diagram_type=physical", "Physical Diagram", "width=800,height=600");
-		});
-
-		$('#logical_diagram_link').on('click', function() {
-			logicalDiagramWindow = window.open("/ui/diagram?diagram_type=logical", "Logical Diagram", "width=800,height=600");
-		});
-
-		$('.alert .close').on('click', function() {
-			$(this).parents('.alert').hide();
+			$("html,body").animate({scrollTop:0},'slow');
+			$('#edit_panel').fadeOut(150);
 		});
 
 		onLoad();
 
 	})(jQuery);
 </script>
-{{template "footer" .}}
+{{template "footerpart" .}}

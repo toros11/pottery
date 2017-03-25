@@ -1,0 +1,32 @@
+{{define "navigation_bar"}}
+<nav class="navbar navbar-inverse navbar-static-top navbar-static-top-fixed" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/qb0C80aE/clay"> Clay </a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="nav navbar-nav">
+        <li {{if eq .resource "index"}}class="active"{{end}}>
+          <a href="/ui/"><span class="glyphicon glyphicon-home"></span> Home</a>
+        </li>
+        <li {{if eq .resource "network"}}class="active"{{end}}>
+          <a href="/ui/network"><span class="glyphicon glyphicon-edit"></span> Network Design</a>
+        </li>
+        <li class="dropdown{{if eq .resource "diagram"}} active{{end}}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-th-large"></span> Diagrams <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/ui/diagram?diagram_type=physical">Physical</a></li>
+            <li><a href="/ui/diagram?diagram_type=logical">Logical</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{{end}}
