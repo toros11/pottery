@@ -20,6 +20,9 @@
 						<li>
 							<a href="#test_scripts_tab" data-toggle="tab">Test Scripts</a>
 						</li>
+						<li>
+							<a href="#node_configuration_tab" data-toggle="tab">Node Configuration</a>
+						</li>
 					</ul>
 				</div>
 				<div class="col-xs-3">
@@ -160,8 +163,16 @@
 						</div>
 					</div>
 				</div>
-			</div>
 
+				<div class="tab-pane" id="node_configuration_tab">
+					<div class="row">
+						<div class="col-xs-12">
+								&nbsp;
+						</div>
+					</div>
+				</div>
+
+			</div>
 		</div>
 	</div>
 </div><!--/Center Column-->
@@ -175,6 +186,7 @@
 		var environment = null;
 
 		const testScriptTemplate = `{{template "environment_test_script" .}}`;
+		const nodeConfigurationTemplate = `{{template "environment_node_configuration" .}}`;
 
 		function buildTemplate(template, templateParameters) {
 			result = template;
@@ -187,7 +199,7 @@
 		function loadEnvironment() {
 			environment = $.parseJSON($.ajax({
 				type: 'GET',
-				url: API_PREFIX + '/environments/' + target + "?preloads=Template,TestCase,TestCase.TestPatterns,TestCase.TestPatterns.TestCommand",
+				url: API_PREFIX + '/environments/' + target + "?preloads=Template,TestCase,TestCase.TestPatterns,TestCase.TestPatterns.TestCommand,NodeConfigs,NodeConfigs.Node",
 				dataType: 'json',
 				contentType: 'application/json',
 				async: false
@@ -208,6 +220,11 @@
 				var serviceName = environment.test_case.test_patterns[i].test_command.service_name
 				environment.test_case.test_patterns[i].test_command.server_script_template = $("#test_script_" + serviceName + "_server").val();
 				environment.test_case.test_patterns[i].test_command.client_script_template = $("#test_script_" + serviceName + "_client").val();
+			}
+			for (var i = 0; i < environment.node_configs.length; i = i + 1) {
+				environment.node_configs[i].firmware_version = $("#node_config_" + environment.node_configs[i].node.id + "_firmware_version").val();
+				environment.node_configs[i].initialize_config = $("#node_config_" + environment.node_configs[i].node.id + "_initialize_config").val();
+				environment.node_configs[i].config = $("#node_config_" + environment.node_configs[i].node.id + "_config").val();
 			}
 			return $.ajax({
 				type: 'PUT',
@@ -251,6 +268,17 @@
 				$("#test_scripts_tab").append(buildTemplate(testScriptTemplate, testScriptTemplateParameters));
 				$("#test_script_" + testCommand.service_name + "_server").val(testCommand.server_script_template);
 				$("#test_script_" + testCommand.service_name + "_client").val(testCommand.client_script_template);
+			}
+			for (var i = 0; i < environment.node_configs.length; i = i + 1) {
+				var nodeConfig = environment.node_configs[i];
+				nodeConfigurationTemplateParameters = {
+					"node_name": nodeConfig.node.name,
+					"node_config_id": nodeConfig.id
+				};
+				$("#node_configuration_tab").append(buildTemplate(nodeConfigurationTemplate, nodeConfigurationTemplateParameters));
+				$("#node_config_" + nodeConfig.id + "_firmware_version").val(nodeConfig.firmware_version);
+				$("#node_config_" + nodeConfig.id + "_initialize_config").val(nodeConfig.initialize_config);
+				$("#node_config_" + nodeConfig.id + "_config").val(nodeConfig.config);
 			}
 			$('#environment_panel').fadeIn(150);
 		}

@@ -140,6 +140,42 @@ func updateTestCaseFile(db *gorm.DB, environment *models.Environment) error {
 	return nil
 }
 
+func updateNodeConfigFiles(_ *gorm.DB, environment *models.Environment) error {
+	for _, config := range environment.NodeConfigs {
+		cmd := exec.Command("mkdir", "-p", fmt.Sprintf("%s/%s/%s", environment.GitRepositoryURI, "config", config.Node.Name))
+		cmdMessage, err := cmd.CombinedOutput()
+		if err != nil {
+			return errors.New(string(cmdMessage))
+		}
+		if ioutil.WriteFile(fmt.Sprintf("%s/%s/%s/initialize.txt",
+			environment.GitRepositoryURI,
+			"config",
+			config.Node.Name),
+			([]byte)(config.InitializeConfig),
+			os.ModePerm); err != nil {
+			return err
+		}
+		if ioutil.WriteFile(fmt.Sprintf("%s/%s/%s/config.txt",
+			environment.GitRepositoryURI,
+			"config",
+			config.Node.Name),
+			([]byte)(config.Config),
+			os.ModePerm); err != nil {
+			return err
+		}
+		if ioutil.WriteFile(fmt.Sprintf("%s/%s/%s/firmware_version.txt",
+			environment.GitRepositoryURI,
+			"config",
+			config.Node.Name),
+			([]byte)(config.FirmwareVersion),
+			os.ModePerm); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func commit(environment *models.Environment, message string) error {
 	cmd := exec.Command("git", "add", ".")
 	cmd.Dir = environment.GitRepositoryURI
@@ -227,12 +263,11 @@ func (_ *EnvironmentLogic) Delete(db *gorm.DB, id string) error {
 }
 
 func (this *EnvironmentLogic) Patch(db *gorm.DB, id string, _ string) (interface{}, error) {
-	data, err := this.GetSingle(db, id, "*")
-	if err != nil {
-		return "", err
-	}
+	environment := &models.Environment{}
 
-	environment := data.(*models.Environment)
+	if err := db.Preload("NodeConfigs").Preload("NodeConfigs.Node").Select("*").First(environment, id).Error; err != nil {
+		return nil, err
+	}
 
 	if err := initGitRepository(environment); err != nil {
 		return "", err
@@ -246,6 +281,9 @@ func (this *EnvironmentLogic) Patch(db *gorm.DB, id string, _ string) (interface
 		return "", err
 	}
 	if err := updateTestCaseFile(db, environment); err != nil {
+		return "", err
+	}
+	if err := updateNodeConfigFiles(db, environment); err != nil {
 		return "", err
 	}
 	if err := commit(environment, message); err != nil {

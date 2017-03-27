@@ -1,0 +1,42 @@
+{{define "environment_node_configuration"}}
+<hr>
+<div class="row">
+  <div class="col-xs-2">
+    {@node_name} Firmware version
+  </div>
+  <div class="col-xs-10">
+    <input id="node_config_{@node_config_id}_firmware_version" name="node_config_{@node_config_id}_firmware_version" class="form-control">
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+      &nbsp;
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-2">
+    {@node_name} Config initializer script
+  </div>
+  <div class="col-xs-10">
+    <textarea id="node_config_{@node_config_id}_initialize_config" name="node_config_{@node_config_id}_initialize_config" rows="8" class="form-control"></textarea>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+      &nbsp;
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-2">
+    {@node_name} Config setting script
+  </div>
+  <div class="col-xs-10">
+    <textarea id="node_config_{@node_config_id}_config" name="node_config_{@node_config_id}_config" rows="8" class="form-control"></textarea>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    &nbsp;
+  </div>
+</div>
+{{end}}

@@ -17,6 +17,7 @@ type Environment struct {
 	DesignFileName        string               `json:"design_file_name" gorm:"not null"`
 	TemplateFileName      string               `json:"template_file_name" gorm:"not null"`
 	TestCaseDirectoryName string               `json:"test_case_directory_name" gorm:"not null"`
+	NodeConfigs           []*NodeConfig        `json:"node_configs"`
 }
 
 var EnvironmentModel = &Environment{}
