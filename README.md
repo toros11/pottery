@@ -26,8 +26,6 @@ $ glide get github.com/qb0C80aE/loam
 $ glide get github.com/qb0C80aE/pottery
 $ glide install
 $ go generate -tags=generate ./...
-$ # Note: In current version, you need to create symlink to Pottery ui directory in the same directory which Clay is located.
-$ # ln -s vendor/github.com/qb0C80aE/pottery/ui/ ui
 $ go build
 $ ./clay &
 ```

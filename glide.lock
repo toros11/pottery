@@ -1,6 +1,12 @@
-hash: d7b057eafb34ce8ff06209cb5b7ce9e710541633648315d74699b3b535dd3076
-updated: 2017-04-29T20:46:26.399328834+09:00
+hash: c72b340ff6693c9a13ef4a12a29e0e0f861c58a1b11600a1da4f546e5ded3c24
+updated: 2017-04-29T20:49:12.199848997+09:00
 imports:
+- name: github.com/elazarl/go-bindata-assetfs
+  version: 30f82fa23fd844bd5bb1e5f216db87fd77b5eb43
+- name: github.com/gin-gonic/contrib
+  version: ffa12cf90b52a4af3ae604f6452e61f8218a517c
+  subpackages:
+  - static
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
   subpackages:
