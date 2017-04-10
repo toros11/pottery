@@ -54,7 +54,7 @@ func (logic *physicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields
 	}
 
 	for _, node := range nodes {
-		var iconPathMap map[int]string = nil
+		var iconPathMap map[int]string
 		if node.NodePvID == 1 {
 			iconPathMap = physicalNodeIconPaths
 		} else {
@@ -99,6 +99,7 @@ func (logic *physicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields
 
 var uniquePhysicalDiagramLogic = newPhysicalDiagramLogic()
 
+// UniquePhysicalDiagramLogic returns the unique physical diagram logic instance
 func UniquePhysicalDiagramLogic() extensions.Logic {
 	return uniquePhysicalDiagramLogic
 }
