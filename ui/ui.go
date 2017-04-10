@@ -7,14 +7,14 @@ import (
 	"net/http"
 )
 
-type RouterInitializer struct {
+type routerInitializer struct {
 }
 
-type PageTemplate struct {
-	Name string
+func newRouterInitializer() *routerInitializer {
+	return &routerInitializer{}
 }
 
-func (routerInitializer *RouterInitializer) InitializeEarly(r *gin.Engine) error {
+func (routerInitializer *routerInitializer) InitializeEarly(r *gin.Engine) error {
 	r.Static("ui/files", "ui/files")
 	r.LoadHTMLGlob("ui/templates/*.tmpl")
 	envMap := envmap.All()
@@ -33,10 +33,12 @@ func (routerInitializer *RouterInitializer) InitializeEarly(r *gin.Engine) error
 	return nil
 }
 
-func (routerInitializer *RouterInitializer) InitializeLate(r *gin.Engine) error {
+func (routerInitializer *routerInitializer) InitializeLate(r *gin.Engine) error {
 	return nil
 }
 
+var uniqueRouterInitializer = newRouterInitializer()
+
 func init() {
-	extensions.RegisterRouterInitializer(&RouterInitializer{})
+	extensions.RegisterRouterInitializer(uniqueRouterInitializer)
 }

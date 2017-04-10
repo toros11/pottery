@@ -17,8 +17,8 @@ It provides graphical network diagram views based on clay datastore.
 # How to build and run
 
 ```
-$ # note: add "pottery.HookSubmodules()" in HookSubmodules()#submodules.go in clay.
-$ # note: in current version, you need to create symlink to pottery ui directory in the same directory which clay is located.
+$ # note: add the '_ "github.com/qb0C80aE/{loam, pottery}" // Install {Loam, Pottery} sub module by importing' lines into the import section of submodules.go in Clay.
+$ # note: in current version, you need to create symlink to pottery ui directory in the same directory which Clay is located.
 $ cd /path/to/clay
 $ go build
 $ ./clay &
