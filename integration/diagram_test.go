@@ -26,11 +26,11 @@ func TestGetDiagram_Empty(t *testing.T) {
 	afterSetupServer(currentDir)
 	defer server.Close()
 
-	responseText, code := Execute(t, http.MethodGet, GenerateSingleResourceUrl(server, "diagrams", "physical", nil), nil)
-	CheckResponseJson(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_Empty_1.json"), &models.Diagram{})
+	responseText, code := Execute(t, http.MethodGet, GenerateSingleResourceURL(server, "diagrams", "physical", nil), nil)
+	CheckResponseJSON(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_Empty_1.json"), &models.Diagram{})
 
-	responseText, code = Execute(t, http.MethodGet, GenerateSingleResourceUrl(server, "diagrams", "logical", nil), nil)
-	CheckResponseJson(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_Empty_2.json"), &models.Diagram{})
+	responseText, code = Execute(t, http.MethodGet, GenerateSingleResourceURL(server, "diagrams", "logical", nil), nil)
+	CheckResponseJSON(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_Empty_2.json"), &models.Diagram{})
 }
 
 func TestGetDiagram(t *testing.T) {
@@ -67,13 +67,13 @@ func TestGetDiagram(t *testing.T) {
 		ID:   7,
 		Name: "Network",
 	}
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_types", nil), nodeType1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_types", nil), nodeType2)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_types", nil), nodeType3)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_types", nil), nodeType4)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_types", nil), nodeType5)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_types", nil), nodeType6)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_types", nil), nodeType7)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType2)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType3)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType4)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType5)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType6)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType7)
 
 	nodePv1 := &loamModels.NodePv{
 		ID:   1,
@@ -83,8 +83,8 @@ func TestGetDiagram(t *testing.T) {
 		ID:   2,
 		Name: "Virtual",
 	}
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_pvs", nil), nodePv1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "node_pvs", nil), nodePv2)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_pvs", nil), nodePv1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_pvs", nil), nodePv2)
 
 	router1 := &loamModels.Node{
 		ID:         1,
@@ -117,11 +117,11 @@ func TestGetDiagram(t *testing.T) {
 		NodePvID:   2,
 	}
 
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "nodes", nil), router1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "nodes", nil), firewall1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "nodes", nil), l2sw1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "nodes", nil), server1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "nodes", nil), server2)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "nodes", nil), router1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "nodes", nil), firewall1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "nodes", nil), l2sw1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "nodes", nil), server1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "nodes", nil), server2)
 
 	router1port0 := &loamModels.Port{
 		ID:     1,
@@ -256,18 +256,18 @@ func TestGetDiagram(t *testing.T) {
 		},
 	}
 
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), router1port0)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), firewll1port0)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), firewll1port1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), l2sw1port0)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), l2sw1port1)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), l2sw1port2)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), server1port0)
-	Execute(t, http.MethodPost, GenerateMultiResourceUrl(server, "ports", nil), server2port0)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), router1port0)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), firewll1port0)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), firewll1port1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), l2sw1port0)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), l2sw1port1)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), l2sw1port2)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), server1port0)
+	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "ports", nil), server2port0)
 
-	responseText, code := Execute(t, http.MethodGet, GenerateSingleResourceUrl(server, "diagrams", "physical", nil), nil)
-	CheckResponseJson(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_1.json"), &models.Diagram{})
+	responseText, code := Execute(t, http.MethodGet, GenerateSingleResourceURL(server, "diagrams", "physical", nil), nil)
+	CheckResponseJSON(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_1.json"), &models.Diagram{})
 
-	responseText, code = Execute(t, http.MethodGet, GenerateSingleResourceUrl(server, "diagrams", "logical", nil), nil)
-	CheckResponseJson(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_2.json"), &models.Diagram{})
+	responseText, code = Execute(t, http.MethodGet, GenerateSingleResourceURL(server, "diagrams", "logical", nil), nil)
+	CheckResponseJSON(t, code, http.StatusOK, responseText, LoadExpectation(t, "diagram/TestGetDiagram_2.json"), &models.Diagram{})
 }
