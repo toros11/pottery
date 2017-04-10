@@ -3,12 +3,9 @@ package ui
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/higanworks/envmap"
-	"github.com/qb0C80aE/clay/extension"
+	"github.com/qb0C80aE/clay/extensions"
 	"net/http"
 )
-
-func HookSubmodules() {
-}
 
 type RouterInitializer struct {
 }
@@ -17,7 +14,7 @@ type PageTemplate struct {
 	Name string
 }
 
-func (_ *RouterInitializer) InitializeEarly(r *gin.Engine) error {
+func (routerInitializer *RouterInitializer) InitializeEarly(r *gin.Engine) error {
 	r.Static("ui/files", "ui/files")
 	r.LoadHTMLGlob("ui/templates/*.tmpl")
 	envMap := envmap.All()
@@ -36,10 +33,10 @@ func (_ *RouterInitializer) InitializeEarly(r *gin.Engine) error {
 	return nil
 }
 
-func (_ *RouterInitializer) InitializeLate(r *gin.Engine) error {
+func (routerInitializer *RouterInitializer) InitializeLate(r *gin.Engine) error {
 	return nil
 }
 
 func init() {
-	extension.RegisterRouterInitializer(&RouterInitializer{})
+	extensions.RegisterRouterInitializer(&RouterInitializer{})
 }

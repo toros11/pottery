@@ -2,12 +2,11 @@ package logics
 
 import (
 	"fmt"
-	"github.com/qb0C80aE/clay/extension"
+	"github.com/qb0C80aE/clay/extensions"
 	"text/template"
 )
 
-func HookSubmodules() {
-}
+const diagramImageRoot string = "/ui/files/images/diagram"
 
 func init() {
 	funcMap := template.FuncMap{
@@ -38,5 +37,5 @@ func init() {
 			return target
 		},
 	}
-	extension.RegisterTemplateFuncMap(funcMap)
+	extensions.RegisterTemplateFuncMap(funcMap)
 }

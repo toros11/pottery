@@ -25,11 +25,51 @@ type DiagramLink struct {
 	Meta   *DiagramMeta `json:"meta"`
 }
 
-var DiagramModel = &Diagram{}
-var DiagramNodeModel = &DiagramNode{}
-var DiagramInterfaceModel = &DiagramInterface{}
-var DiagramMetaModel = &DiagramMeta{}
-var DiagramLinkModel = &DiagramLink{}
+func NewDiagramModel() *Diagram {
+	return &Diagram{}
+}
+
+func NewDiagramNodeModel() *DiagramNode {
+	return &DiagramNode{}
+}
+
+func NewDiagramInterfaceModel() *DiagramInterface {
+	return &DiagramInterface{}
+}
+
+func NewDiagramMetaModel() *DiagramMeta {
+	return &DiagramMeta{}
+}
+
+func NewDiagramLinkModel() *DiagramLink {
+	return &DiagramLink{}
+}
+
+var sharedDiagramModel = NewDiagramModel()
+var sharedDiagramNodeModel = NewDiagramNodeModel()
+var sharedDiagramInterfaceModel = NewDiagramInterfaceModel()
+var sharedDiagramMetaModel = NewDiagramMetaModel()
+var sharedDiagramLinkModel = NewDiagramLinkModel()
+
+func SharedDiagramModel() *Diagram {
+	return sharedDiagramModel
+}
+
+func SharedDiagramNodeModel() *DiagramNode {
+	return sharedDiagramNodeModel
+}
+
+func SharedDiagramInterfaceModel() *DiagramInterface {
+	return sharedDiagramInterfaceModel
+}
+
+func SharedDiagramMetaModel() *DiagramMeta {
+	return sharedDiagramMetaModel
+}
+
+func SharedDiagramLinkModel() *DiagramLink {
+	return sharedDiagramLinkModel
+}
 
 func init() {
 }
