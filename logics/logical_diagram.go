@@ -34,18 +34,13 @@ func newLogicalDiagramLogic() *logicalDiagramLogic {
 }
 
 func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields string) (interface{}, error) {
-	nodePvs := []*loamModels.NodePv{}
-	if err := db.Select(queryFields).Find(&nodePvs).Error; err != nil {
-		return nil, err
-	}
-
 	nodeTypes := []*loamModels.NodeType{}
 	if err := db.Select(queryFields).Find(&nodeTypes).Error; err != nil {
 		return nil, err
 	}
 
 	nodes := []*loamModels.Node{}
-	if err := db.Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
+	if err := db.Preload("NodeExtraAttributes").Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
 		return nil, err
 	}
 
@@ -70,12 +65,14 @@ func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields 
 	diagram := &models.Diagram{}
 
 	for _, node := range nodes {
+		nodeExtraAttributes := loamLogics.BuildNodeExtraAttributeMapByName(node.NodeExtraAttributes)
 		if node.NodeTypeID != 1 {
 			var iconPathMap map[int]string
-			if node.NodePvID == 1 {
-				iconPathMap = physicalNodeIconPaths
-			} else {
+			attribute, exists := nodeExtraAttributes["virtual"]
+			if exists && attribute.ValueBool.Valid && attribute.ValueBool.Bool {
 				iconPathMap = virtualNodeIconPaths
+			} else {
+				iconPathMap = physicalNodeIconPaths
 			}
 			diagramNode := &models.DiagramNode{
 				node.Name,

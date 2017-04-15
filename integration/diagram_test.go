@@ -75,46 +75,75 @@ func TestGetDiagram(t *testing.T) {
 	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType6)
 	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_types", nil), nodeType7)
 
-	nodePv1 := &loamModels.NodePv{
-		ID:   1,
-		Name: "Physical",
-	}
-	nodePv2 := &loamModels.NodePv{
-		ID:   2,
-		Name: "Virtual",
-	}
-	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_pvs", nil), nodePv1)
-	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "node_pvs", nil), nodePv2)
-
 	router1 := &loamModels.Node{
 		ID:         1,
 		Name:       "router1",
 		NodeTypeID: 4,
-		NodePvID:   1,
+		NodeExtraAttributes: []*loamModels.NodeExtraAttribute{
+			{
+				Name: "virtual",
+				ValueBool: sql.NullBool{
+					Valid: true,
+					Bool:  false,
+				},
+			},
+		},
 	}
 	firewall1 := &loamModels.Node{
 		ID:         2,
 		Name:       "firewall1",
 		NodeTypeID: 3,
-		NodePvID:   1,
+		NodeExtraAttributes: []*loamModels.NodeExtraAttribute{
+			{
+				Name: "virtual",
+				ValueBool: sql.NullBool{
+					Valid: true,
+					Bool:  false,
+				},
+			},
+		},
 	}
 	l2sw1 := &loamModels.Node{
 		ID:         3,
 		Name:       "l2sw1",
 		NodeTypeID: 1,
-		NodePvID:   2,
+		NodeExtraAttributes: []*loamModels.NodeExtraAttribute{
+			{
+				Name: "virtual",
+				ValueBool: sql.NullBool{
+					Valid: true,
+					Bool:  true,
+				},
+			},
+		},
 	}
 	server1 := &loamModels.Node{
 		ID:         4,
 		Name:       "server1",
 		NodeTypeID: 6,
-		NodePvID:   2,
+		NodeExtraAttributes: []*loamModels.NodeExtraAttribute{
+			{
+				Name: "virtual",
+				ValueBool: sql.NullBool{
+					Valid: true,
+					Bool:  true,
+				},
+			},
+		},
 	}
 	server2 := &loamModels.Node{
 		ID:         5,
 		Name:       "server2",
 		NodeTypeID: 6,
-		NodePvID:   2,
+		NodeExtraAttributes: []*loamModels.NodeExtraAttribute{
+			{
+				Name: "virtual",
+				ValueBool: sql.NullBool{
+					Valid: true,
+					Bool:  true,
+				},
+			},
+		},
 	}
 
 	Execute(t, http.MethodPost, GenerateMultiResourceURL(server, "nodes", nil), router1)

@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/qb0C80aE/clay/extensions"
 	clayLogics "github.com/qb0C80aE/clay/logics"
+	loamLogics "github.com/qb0C80aE/loam/logics"
 	loamModels "github.com/qb0C80aE/loam/models"
 	"github.com/qb0C80aE/pottery/models"
 )
@@ -34,7 +35,7 @@ func (logic *physicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields
 	diagram := &models.Diagram{}
 
 	nodes := []*loamModels.Node{}
-	if err := db.Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
+	if err := db.Preload("NodeExtraAttributes").Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
 		return nil, err
 	}
 
@@ -54,11 +55,13 @@ func (logic *physicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields
 	}
 
 	for _, node := range nodes {
+		nodeExtraAttributes := loamLogics.BuildNodeExtraAttributeMapByName(node.NodeExtraAttributes)
 		var iconPathMap map[int]string
-		if node.NodePvID == 1 {
-			iconPathMap = physicalNodeIconPaths
-		} else {
+		attribute, exists := nodeExtraAttributes["virtual"]
+		if exists && attribute.ValueBool.Valid && attribute.ValueBool.Bool {
 			iconPathMap = virtualNodeIconPaths
+		} else {
+			iconPathMap = physicalNodeIconPaths
 		}
 		diagramNode := &models.DiagramNode{
 			Name: node.Name,
