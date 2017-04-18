@@ -1,7 +1,10 @@
 {{template "headerpart" .}}
 <div class="panel panel-default panel-custom" id="diagram_panel">
 	<div class="panel-heading">
-		<h1 class="panel-title"><span class="glyphicon glyphicon-th-large"></span> <span id="diagram_title"></span></h1>
+		<h1 class="panel-title">
+			<span class="glyphicon glyphicon-th-large"></span>
+			<span id="diagram_title"></span>
+		</h1>
 	</div>
 	<div class="panel-body">
 		<div id="diagram_canvas"></div>
@@ -11,45 +14,34 @@
 <script language="javascript">
 	(function($) {
 
-		const API_PREFIX = '/v1';
+		{{template "functions" .}}
 
-		function getUrlVars() {
-			var vars = [], hash;
-			var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-			for (var i = 0; i < hashes.length; i++) {
-				hash = hashes[i].split('=');
-				vars.push(hash[0]);
-				vars[hash[0]] = hash[1];
-			}
-			return vars;
-		}
-
-		var diagramType = getUrlVars()["diagram_type"]
+		var diagramType = getUrlVars()['diagram_type'];
 		var diagramProperties = {
 			physical: {
-				title: "Physical Diagram",
+				title: 'Physical Diagram',
 				distance: function(force) {
 					force.jaccardLinkLengths(70, 0.2);
 				}
 			},
-			"logical": {
-				title: "Logical Diagram",
+			logical: {
+				title: 'Logical Diagram',
 				distance: function(force) {
 					force.jaccardLinkLengths(150, 0.2);
 				}
 			}
-		}
+		};
 
 		function onUpdateNetworkDiagram() {
 			$('#diagram_panel').fadeOut(150, function() {
-				$("#diagram_title").text(diagramProperties[diagramType].title);
-				$("#diagram_canvas").children().remove();
-				$("#diagram_canvas").append('<div id="diagram"></div>');
+				$('#diagram_title').text(diagramProperties[diagramType].title);
+				$('#diagram_canvas').children().remove();
+				$('#diagram_canvas').append($('<div>').prop('id', 'diagram'));
 				$('#diagram_panel').fadeIn(150, function() {
 					var diagramInstance = new Diagram('#diagram', API_PREFIX + '/diagrams/' + diagramType, {
 						pop: /^([^\s-]+)-/,
 						distance: diagramProperties[diagramType].distance,
-						width: $("#diagram_canvas").width(),
+						width: $('#diagram_canvas').width(),
 						height: 900
 					});
 					diagramInstance.init('interface');
