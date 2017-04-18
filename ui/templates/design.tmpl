@@ -1,0 +1,123 @@
+{{template "headerpart" .}}
+<div class="col-sm-8">
+	<div class="panel panel-default panel-custom" id="design_file_panel">
+		<div class="panel-heading">
+			<h1 class="panel-title">
+				<span class="glyphicon glyphicon-import"></span> Import/Export Design
+			</h1>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-xs-2">
+					<span class="glyphicon glyphicon-file"></span> Design File
+				</div>
+				<div class="col-xs-10">
+					<div class="input-group text-left">
+						<input id="design_file" type="file" name="design_file" class="form-control">
+						<span class="input-group-btn">
+							<button class="btn btn-default" id="import_file_btn" type="button">
+								<span class="glyphicon glyphicon-import"></span>
+							</button>
+							<button class="btn btn-default" id="export_file_btn" type="button">
+								<span class="glyphicon glyphicon-export"></span>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script language="javascript">
+	(function($) {
+
+		{{template "functions" .}}
+
+		var designData = null;
+
+		function onLoad() {
+			$('#design_file_panel').fadeIn(150);
+		}
+
+		function onImported(result, successCode, successMessage, ignoreSuccess) {
+			if (result.status == successCode) {
+				if (!ignoreSuccess) {
+					$('html,body').animate({
+						scrollTop: 0
+					}, 'slow');
+					$('#information_message').text(successMessage);
+					$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
+					$('#edit_panel').fadeOut(150);
+				}
+				return true;
+			}
+			else {
+				$('html,body').animate({
+					scrollTop: 0
+				}, 'slow');
+				$('#error_message').text(result.resource.error);
+				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
+				return false;
+			}
+		}
+
+		function onImport() {
+			if (designData == null) {
+				alert('Select design file first.');
+				return;
+			}
+
+			if (!confirm('Are you sure to import?')) {
+				return;
+			}
+
+			var result = putResource('designs', 'present', designData);
+			onImported(result, 200, 'The design file has imported successfully', false);
+		}
+
+		document.getElementById('design_file').addEventListener('change', function(evt) {
+			var file = evt.target.files;
+			var reader = new FileReader();
+			reader.readAsText(file[0]);
+			reader.onload = function(ev) {
+				try {
+					designData = $.parseJSON(reader.result);
+				}
+				catch (e) {
+					designData = null;
+					$('html,body').animate({
+						scrollTop: 0
+					}, 'slow');
+					$('#error_message').text('The selected file is not a JSON file');
+					$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
+				}
+			}
+		}, false);
+
+		function onExport() {
+			if (!confirm('Are you sure to export?')) {
+				return;
+			}
+			var design = JSON.stringify(getResource('designs', 'present', '').resource, null, '    ');
+
+			var content = design;
+			var link = document.createElement('a');
+			link.href = window.URL.createObjectURL(new Blob([content]));
+			link.download = 'design.json';
+			link.click();
+		}
+
+		$('#import_file_btn').on('click', function() {
+			onImport();
+		});
+
+		$('#export_file_btn').on('click', function() {
+			onExport();
+		});
+
+		onLoad();
+
+	})(jQuery);
+</script>
+{{template "footerpart" .}}
