@@ -34,33 +34,20 @@ func newLogicalDiagramLogic() *logicalDiagramLogic {
 }
 
 func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields string) (interface{}, error) {
-	nodeTypes := []*loamModels.NodeType{}
-	if err := db.Select(queryFields).Find(&nodeTypes).Error; err != nil {
+	segments, err := loamLogics.GenerateSegments(db)
+	if err != nil {
 		return nil, err
 	}
 
 	nodes := []*loamModels.Node{}
-	if err := db.Preload("NodeExtraAttributes").Preload("Ports").Select(queryFields).Find(&nodes).Error; err != nil {
+	if err := db.Preload("NodeExtraAttributes").Preload("Ports").Preload("Ports.Vlans").Select(queryFields).Find(&nodes).Error; err != nil {
 		return nil, err
 	}
 
-	ports := []*loamModels.Port{}
-	if err := db.Select(queryFields).Find(&ports).Error; err != nil {
-		return nil, err
-	}
-
-	nodeMap := make(map[int]*loamModels.Node)
-	portMap := make(map[int]*loamModels.Port)
-	consumedPortMap := make(map[int]*loamModels.Port)
-
+	nodeMap := map[int]*loamModels.Node{}
 	for _, node := range nodes {
 		nodeMap[node.ID] = node
 	}
-	for _, port := range ports {
-		portMap[port.ID] = port
-	}
-
-	segments := loamLogics.GenerateSegments(nodeMap, portMap, consumedPortMap)
 
 	diagram := &models.Diagram{}
 
