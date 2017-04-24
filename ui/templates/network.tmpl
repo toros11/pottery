@@ -181,10 +181,8 @@
 		var nodeMap = null;
 		var nodeTypes = null;
 		var nodeTypeMap = null;
-		var nodeExtraAttributeMap = null;
 		var ports = null;
 		var portMap = null;
-		var portExtraAttributeMap = null;
 		var editingNode = null;
 		var editPortsTable = null;
 		var editMode = null;
@@ -200,7 +198,7 @@
 			{value: 3, text: 'Layer3'}
 		];
 
-		function buildNodeExtraAttributeMapByName(nodeExtraAttributes, nodeExtraAttributeMap) {
+		function buildNodeExtraAttributeMapByName(nodeExtraAttributes) {
 			var nodeExtraAttributeMapByName = {
 				virtual: {
 					value_bool: {
@@ -215,43 +213,15 @@
 					}
 				},
 			};
-			var consumedMap = {};
 			for (var i = 0; i < nodeExtraAttributes.length; i = i + 1) {
 				var nodeExtraAttribute = nodeExtraAttributes[i];
-				if (!nodeExtraAttribute.parent_node_extra_attribute_id.Valid) {
-					if (consumedMap[nodeExtraAttribute.id] != null) {
-					} else {
-						consumedMap[nodeExtraAttribute.id] = nodeExtraAttribute;
-						nodeExtraAttribute.child_node_extra_attributes = [];
-						nodeExtraAttributeMapByName[nodeExtraAttribute.name] = nodeExtraAttributeMap[nodeExtraAttribute.id];
-					}
-				} else {
-					var parentNodeExtraAttribute = consumedMap[nodeExtraAttribute.parent_node_extra_attribute_id.Int64];
-					if (parentNodeExtraAttribute != null) {
-						consumedMap[nodeExtraAttribute.id] = nodeExtraAttribute;
-						parentNodeExtraAttribute.child_node_extra_attributes.push(nodeExtraAttributeMap[nodeExtraAttribute.id]);
-					} else {
-						consumedMap[nodeExtraAttribute.id] = nodeExtraAttribute;
-						for (var j = 0; j < nodeExtraAttributes.length; j = j + 1) {
-							parentNodeExtraAttribute = nodeExtraAttributes[j];
-							if (!consumedMap[parentNodeExtraAttribute.id] != null) {
-								continue;
-							}
-							consumedMap[parentNodeExtraAttribute.id] = parentNodeExtraAttribute;
-							parentNodeExtraAttribute.child_node_extra_attributes = [];
-							if (!parentNodeExtraAttribute.parent_node_extra_attribute_id.Valid) {
-								nodeExtraAttributeMapByName[parentNodeExtraAttribute.name] = nodeExtraAttributeMap[parentNodeExtraAttribute.id];
-							}
-							break;
-						}
-					}
-				}
+				nodeExtraAttributeMapByName[nodeExtraAttribute.name] = nodeExtraAttribute
 			}
 			return nodeExtraAttributeMapByName;
 		}
 
-		function buildPortExtraAttributeMapByName(PortExtraAttributes, PortExtraAttributeMap) {
-			var PortExtraAttributeMapByName = {
+		function buildPortExtraAttributeMapByName(portExtraAttributes) {
+			var portExtraAttributeMapByName = {
 				remark: {
 					value_string: {
 						Valid: true,
@@ -259,39 +229,11 @@
 					}
 				}
 			};
-			var consumedMap = {};
-			for (var i = 0; i < PortExtraAttributes.length; i = i + 1) {
-				var PortExtraAttribute = PortExtraAttributes[i];
-				if (!PortExtraAttribute.parent_port_extra_attribute_id.Valid) {
-					if (consumedMap[PortExtraAttribute.id] != null) {
-					} else {
-						consumedMap[PortExtraAttribute.id] = PortExtraAttribute;
-						PortExtraAttribute.child_Port_extra_attributes = [];
-						PortExtraAttributeMapByName[PortExtraAttribute.name] = PortExtraAttributeMap[PortExtraAttribute.id];
-					}
-				} else {
-					var parentPortExtraAttribute = consumedMap[PortExtraAttribute.parent_port_extra_attribute_id.Int64];
-					if (parentPortExtraAttribute != null) {
-						consumedMap[PortExtraAttribute.id] = PortExtraAttribute;
-						parentPortExtraAttribute.child_Port_extra_attributes.push(PortExtraAttributeMap[PortExtraAttribute.id]);
-					} else {
-						consumedMap[PortExtraAttribute.id] = PortExtraAttribute;
-						for (var j = 0; j < PortExtraAttributes.length; j = j + 1) {
-							parentPortExtraAttribute = PortExtraAttributes[j];
-							if (!consumedMap[parentPortExtraAttribute.id] != null) {
-								continue;
-							}
-							consumedMap[parentPortExtraAttribute.id] = parentPortExtraAttribute;
-							parentPortExtraAttribute.child_Port_extra_attributes = [];
-							if (!parentPortExtraAttribute.parent_port_extra_attribute_id.Valid) {
-								PortExtraAttributeMapByName[parentPortExtraAttribute.name] = PortExtraAttributeMap[parentPortExtraAttribute.id];
-							}
-							break;
-						}
-					}
-				}
+			for (var i = 0; i < portExtraAttributes.length; i = i + 1) {
+				var portExtraAttribute = portExtraAttributes[i];
+				portExtraAttributeMapByName[portExtraAttribute.name] = portExtraAttribute
 			}
-			return PortExtraAttributeMapByName;
+			return portExtraAttributeMapByName;
 		}
 
 		function extraBoolAttribute(name, extraAttributeMapByName) {
@@ -511,6 +453,7 @@
 			if (node != null) {
 				$('#node_name').append(node.name);
 				var nodePv = 'physical';
+				console.log(node.node_extra_attribute_map_by_name)
 				if (node.node_extra_attribute_map_by_name['virtual'].value_bool.Bool) {
 					nodePv = 'virtual';
 				}
@@ -673,12 +616,11 @@
 		}
 
 		function loadResources() {
-			nodes = getResources('nodes', 'preloads=NodeType,Ports,NodeExtraAttributes,NodeExtraAttributes.ChildNodeExtraAttributes&fields=id,name,node_type,ports.id,ports.destination_port_id,node_extra_attributes.id,node_extra_attributes.name,node_extra_attributes.parent_node_extra_attribute_id,node_extra_attributes.child_node_extra_attributes.id').resources;
+			nodes = getResources('nodes', 'preloads=NodeType,Ports,NodeExtraAttributes&fields=id,name,node_type,ports.id,ports.destination_port_id,node_extra_attributes.*').resources;
 			nodeMap = buildResouceMapFromResourceArray(nodes);
 			nodeTypes = getResources('node_types', '').resources;
 			nodeTypeMap = buildResouceMapFromResourceArray(nodeTypes);
 			var nodeExtraAttributes = getResources('node_extra_attributes', '').resources;
-			nodeExtraAttributeMap = buildResouceMapFromResourceArray(nodeExtraAttributes);
 			for (var i = 0; i < nodes.length; i = i + 1) {
 				var node = nodes[i];
 				if (node.ports == null) {
@@ -687,18 +629,17 @@
 				if (node.node_extra_attributes == null) {
 					node.node_extra_attributes = [];
 				}
-				node.node_extra_attribute_map_by_name = buildNodeExtraAttributeMapByName(node.node_extra_attributes, nodeExtraAttributeMap);
+				node.node_extra_attribute_map_by_name = buildNodeExtraAttributeMapByName(node.node_extra_attributes);
 			}
-			ports = getResources('ports', 'preloads=DestinationPort,PortExtraAttributes,PortExtraAttributes.ChildPortExtraAttributes&fields=id,name,node_id,number,layer,mac_address,ipv4_address,ipv4_prefix,destination_port_id,destination_port,port_extra_attributes.id,port_extra_attributes.name,port_extra_attributes.parent_port_extra_attribute_id,port_extra_attributes.child_port_extra_attributes.id').resources;
+			ports = getResources('ports', 'preloads=DestinationPort,PortExtraAttributes&fields=id,name,node_id,number,layer,mac_address,ipv4_address,ipv4_prefix,destination_port_id,destination_port,port_extra_attributes.*').resources;
 			portMap = buildResouceMapFromResourceArray(ports);
 			var portExtraAttributes = getResources('port_extra_attributes', '').resources;
-			portExtraAttributeMap = buildResouceMapFromResourceArray(portExtraAttributes);
 			for (var i = 0; i < ports.length; i = i + 1) {
 				var port = ports[i];
 				if (port.port_extra_attributes == null) {
 					port.port_extra_attributes = [];
 				}
-				port.port_extra_attribute_map_by_name = buildPortExtraAttributeMapByName(port.port_extra_attributes, portExtraAttributeMap);
+				port.port_extra_attribute_map_by_name = buildPortExtraAttributeMapByName(port.port_extra_attributes);
 			}
 		}
 

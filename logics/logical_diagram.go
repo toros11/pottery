@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/qb0C80aE/clay/extensions"
 	clayLogics "github.com/qb0C80aE/clay/logics"
+	"github.com/qb0C80aE/clay/utils/mapstruct"
 	loamLogics "github.com/qb0C80aE/loam/logics"
 	loamModels "github.com/qb0C80aE/loam/models"
 	"github.com/qb0C80aE/pottery/models"
@@ -65,10 +66,14 @@ func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields 
 	diagram := &models.Diagram{}
 
 	for _, node := range nodes {
-		nodeExtraAttributes := loamLogics.BuildNodeExtraAttributeMapByName(node.NodeExtraAttributes)
+		nodeExtraAttributesMap, err := mapstruct.SliceToInterfaceSliceMap(node.NodeExtraAttributes, "Name")
+		if err != nil {
+			return nil, err
+		}
 		if node.NodeTypeID != 1 {
 			var iconPathMap map[int]string
-			attribute, exists := nodeExtraAttributes["virtual"]
+			attributes, exists := nodeExtraAttributesMap["virtual"]
+			attribute := attributes[0].(*loamModels.NodeExtraAttribute)
 			if exists && attribute.ValueBool.Valid && attribute.ValueBool.Bool {
 				iconPathMap = virtualNodeIconPaths
 			} else {
