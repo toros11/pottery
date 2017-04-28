@@ -1,7 +1,10 @@
 package models
 
+import "github.com/qb0C80aE/clay/extensions"
+
 // Diagram is the model class what represents physical and logical diagrams
 type Diagram struct {
+	ID    int            `json:"-,omitempty" gorm:"primary_key"`
 	Nodes []*DiagramNode `json:"nodes"`
 	Links []*DiagramLink `json:"links"`
 }
@@ -87,4 +90,5 @@ func SharedDiagramLinkModel() *DiagramLink {
 }
 
 func init() {
+	extensions.RegisterModel(&Diagram{})
 }

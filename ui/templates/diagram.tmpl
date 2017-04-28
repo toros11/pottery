@@ -38,7 +38,7 @@
 				$('#diagram_canvas').children().remove();
 				$('#diagram_canvas').append($('<div>').prop('id', 'diagram'));
 				$('#diagram_panel').fadeIn(150, function() {
-					var diagramInstance = new Diagram('#diagram', API_PREFIX + '/diagrams/' + diagramType, {
+					var diagramInstance = new Diagram('#diagram', '/diagrams/' + diagramType, {
 						pop: /^([^\s-]+)-/,
 						distance: diagramProperties[diagramType].distance,
 						width: $('#diagram_canvas').width(),
