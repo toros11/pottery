@@ -1,5 +1,4 @@
 {{define "functions"}}
-const API_PREFIX = '/v1';
 
 function getResources(target, query) {
   if (query != '') {
@@ -7,7 +6,7 @@ function getResources(target, query) {
   }
   var response = $.ajax({
     type: 'GET',
-    url: API_PREFIX + '/' + target + query,
+    url: '/' + target + query,
     dataType: 'json',
     contentType: 'application/json',
     async: false
@@ -26,7 +25,7 @@ function getResource(target, id, query) {
   }
   var response = $.ajax({
     type: 'GET',
-    url: API_PREFIX + '/' + target + '/' + id,
+    url: '/' + target + '/' + id,
     dataType: 'json',
     contentType: 'application/json',
     async: false
@@ -45,7 +44,7 @@ function getResourceAsText(target, id, query) {
   }
   var response = $.ajax({
     type: 'GET',
-    url: API_PREFIX + '/' + target + '/' + id,
+    url: '/' + target + '/' + id,
     dataType: 'json',
     contentType: 'application/json',
     async: false
@@ -61,7 +60,7 @@ function getResourceAsText(target, id, query) {
 function postResource(target, resource) {
   var response = $.ajax({
     type: 'POST',
-    url: API_PREFIX + '/' + target,
+    url: '/' + target,
     dataType: 'json',
     contentType: 'application/json',
     data: JSON.stringify(resource),
@@ -78,7 +77,7 @@ function postResource(target, resource) {
 function putResource(target, id, resource) {
   var response = $.ajax({
     type: 'PUT',
-    url: API_PREFIX + '/' + target + '/' + id,
+    url: '/' + target + '/' + id,
     dataType: 'json',
     contentType: 'application/json',
     data: JSON.stringify(resource),
@@ -95,7 +94,7 @@ function putResource(target, id, resource) {
 function deleteResource(target, id) {
   var response = $.ajax({
     type: 'DELETE',
-    url: API_PREFIX + '/' + target + '/' + id,
+    url: '/' + target + '/' + id,
     dataType: 'json',
     contentType: 'application/json',
     async: false
@@ -114,7 +113,7 @@ function deleteResource(target, id) {
 function patchResource(target, id) {
   var response = $.ajax({
     type: 'PATCH',
-    url: API_PREFIX + '/' + target + '/' + id,
+    url: '/' + target + '/' + id,
     dataType: 'json',
     contentType: 'application/json',
     async: false

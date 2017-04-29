@@ -31,8 +31,8 @@ $ ./clay &
 The diagram resource return the physical and logical diagram for [inet-henge](https://github.com/codeout/inet-henge) based on Loam data models.
 
 ```
-$ curl -X GET "localhost:8080/v1/diagrams/physical"
-$ curl -X GET "localhost:8080/v1/diagrams/logical"
+$ curl -X GET "localhost:8080/diagrams/physical"
+$ curl -X GET "localhost:8080/diagrams/logical"
 ```
 
 # API Server
@@ -42,8 +42,8 @@ $ curl -X GET "localhost:8080/v1/diagrams/logical"
 ### Diagram Resource
 
 ```
-GET    /<version>/diagrams/physical
-GET    /<version>/diagrams/logical
+GET    /diagrams/physical
+GET    /diagrams/logical
 ```
 
 # Thanks
