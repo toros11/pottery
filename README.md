@@ -17,9 +17,17 @@ It provides graphical network diagram views based on clay datastore.
 # How to build and run
 
 ```
-$ # note: add the '_ "github.com/qb0C80aE/{loam, pottery}" // Install {Loam, Pottery} sub module by importing' lines into the import section of submodules.go in Clay.
-$ # note: in current version, you need to create symlink to pottery ui directory in the same directory which Clay is located.
-$ cd /path/to/clay
+$ # Prerequisites: glide has been installed already.
+$ # Prerequisites: Clay has been cloned into $GOPATH/src/github.com/qb0C80aE/clay already.
+$ cd $GOPATH/src/github.com/qb0C80aE/clay
+$ # Edit: Add the '_ "github.com/qb0C80aE/loam" // Install Loam sub module by importing' line into the import section of submodules/submodules.go in Clay.
+$ # Edit: Add the '_ "github.com/qb0C80aE/pottery" // Install Pottery sub module by importing' line into the import section of submodules/submodules.go in Clay.
+$ glide get github.com/qb0C80aE/loam
+$ glide get github.com/qb0C80aE/pottery
+$ glide install
+$ go generate -tags=generate ./...
+$ # Note: In current version, you need to create symlink to Pottery ui directory in the same directory which Clay is located.
+$ # ln -s vendor/github.com/qb0C80aE/pottery/ui/ ui
 $ go build
 $ ./clay &
 ```
@@ -48,5 +56,5 @@ GET    /diagrams/logical
 
 # Thanks
 
-* Pottery uses https://github.com/codeout/inet-henge
-* Pottery uses http://www.quackit.com/html/templates/download/bootstrap/portal-1/
+* Pottery is using https://github.com/codeout/inet-henge to draw diagrams.
+* Pottery is using http://www.quackit.com/html/templates/download/bootstrap/portal-1/ to make UI looking better.
