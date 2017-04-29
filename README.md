@@ -17,6 +17,8 @@ It provides graphical network diagram views based on clay datastore.
 # How to build and run
 
 ```
+$ # Note: Please install go-bindata first.
+$ go get github.com/jteeuwen/go-bindata/...
 $ # Prerequisites: glide has been installed already.
 $ # Prerequisites: Clay has been cloned into $GOPATH/src/github.com/qb0C80aE/clay already.
 $ cd $GOPATH/src/github.com/qb0C80aE/clay
