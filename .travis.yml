@@ -10,6 +10,7 @@ before_install:
 install:
  - go get github.com/Masterminds/glide
  - go get -u github.com/golang/lint/golint
+ - go get github.com/jteeuwen/go-bindata/...
 
 script:
  - glide install
