@@ -1,5 +1,5 @@
 hash: d7b057eafb34ce8ff06209cb5b7ce9e710541633648315d74699b3b535dd3076
-updated: 2017-04-29T18:40:50.499139278+09:00
+updated: 2017-04-29T20:46:26.399328834+09:00
 imports:
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
@@ -25,7 +25,7 @@ imports:
 - name: github.com/mattn/go-sqlite3
   version: ca5e3819723d8eeaf170ad510e7da1d6d2e94a08
 - name: github.com/qb0C80aE/clay
-  version: 792472f888ec4da40944557880d61e5cdeee0391
+  version: aad0a0aaf9a709394682efffbfa66c7753c15963
   subpackages:
   - controllers
   - db
@@ -41,7 +41,7 @@ imports:
   - utils/mapstruct
   - version
 - name: github.com/qb0C80aE/loam
-  version: ec962e14dc23a4dd0fbbc6ce592a658ad96d116d
+  version: 2aa3579c7666c149eb90c8b7a20adf4d189c0cd4
   subpackages:
   - controllers
   - logics
