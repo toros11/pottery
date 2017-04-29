@@ -67,8 +67,8 @@ func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields 
 				iconPathMap = physicalNodeIconPaths
 			}
 			diagramNode := &models.DiagramNode{
-				node.Name,
-				iconPathMap[node.NodeTypeID],
+				Name: node.Name,
+				Icon: iconPathMap[node.NodeTypeID],
 			}
 			diagram.Nodes = append(diagram.Nodes, diagramNode)
 		}
@@ -77,8 +77,8 @@ func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields 
 	for i, segment := range segments {
 
 		diagramNode := &models.DiagramNode{
-			fmt.Sprintf("[%d]%s", i, segment.Cidr),
-			segmentIconPath,
+			Name: fmt.Sprintf("[%d]%s", i, segment.Cidr),
+			Icon: segmentIconPath,
 		}
 		diagram.Nodes = append(diagram.Nodes, diagramNode)
 
