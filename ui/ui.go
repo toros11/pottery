@@ -75,6 +75,23 @@ func newRouterInitializer() *routerInitializer {
 	return &routerInitializer{}
 }
 
+func versionInformation() map[interface{}]interface{} {
+	programInformation := extensions.RegisteredProgramInformation()
+	subModuleInformationList := programInformation.SubModuleInformationList()
+	subModuleInformationMapList := make([]map[string]string, len(subModuleInformationList))
+	for i, subModuleInformation := range subModuleInformationList {
+		subModuleInformationMapList[i] = map[string]string{
+			"Name":     subModuleInformation.Name(),
+			"Revision": subModuleInformation.Revision(),
+		}
+	}
+	result := map[interface{}]interface{}{
+		"BuildTime":                programInformation.BuildTime(),
+		"SubModuleInformationList": subModuleInformationMapList,
+	}
+	return result
+}
+
 func (routerInitializer *routerInitializer) InitializeEarly(r *gin.Engine) error {
 	r.Use(static.Serve("/ui/files", BinaryFileSystem("ui/files")))
 
@@ -102,7 +119,7 @@ func (routerInitializer *routerInitializer) InitializeEarly(r *gin.Engine) error
 	ui := r.Group("/ui")
 	{
 		ui.GET("/", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "index.tmpl", gin.H{"env": envMap, "category": "home"})
+			c.HTML(http.StatusOK, "index.tmpl", gin.H{"env": envMap, "version": versionInformation(), "category": "home"})
 		})
 		ui.GET("/network", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "network.tmpl", gin.H{"env": envMap, "category": "design"})
