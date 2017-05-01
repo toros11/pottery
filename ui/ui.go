@@ -35,7 +35,12 @@ func (b *binaryFileSystem) Exists(prefix string, filepath string) bool {
 
 // BinaryFileSystem builds binaryFileSystem instance
 func BinaryFileSystem(root string) static.ServeFileSystem {
-	fs := &assetfs.AssetFS{Asset, AssetDir, AssetInfo, root}
+	fs := &assetfs.AssetFS{
+		Asset:     Asset,
+		AssetDir:  AssetDir,
+		AssetInfo: AssetInfo,
+		Prefix:    root,
+	}
 	return &binaryFileSystem{
 		fs,
 	}
