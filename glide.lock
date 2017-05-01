@@ -1,5 +1,5 @@
 hash: c72b340ff6693c9a13ef4a12a29e0e0f861c58a1b11600a1da4f546e5ded3c24
-updated: 2017-04-29T20:49:12.199848997+09:00
+updated: 2017-05-01T15:40:15.298458871+09:00
 imports:
 - name: github.com/elazarl/go-bindata-assetfs
   version: 30f82fa23fd844bd5bb1e5f216db87fd77b5eb43
@@ -31,8 +31,9 @@ imports:
 - name: github.com/mattn/go-sqlite3
   version: ca5e3819723d8eeaf170ad510e7da1d6d2e94a08
 - name: github.com/qb0C80aE/clay
-  version: aad0a0aaf9a709394682efffbfa66c7753c15963
+  version: ed87df734739bcaee95fbca00d1c9659d243da2d
   subpackages:
+  - buildtime
   - controllers
   - db
   - extensions
@@ -42,12 +43,13 @@ imports:
   - middleware
   - models
   - router
+  - runtime
   - server
   - submodules
   - utils/mapstruct
   - version
 - name: github.com/qb0C80aE/loam
-  version: 2aa3579c7666c149eb90c8b7a20adf4d189c0cd4
+  version: 6b0e6a98740d8dbe7733c4018484359796fbb15b
   subpackages:
   - controllers
   - logics
