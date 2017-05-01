@@ -1,12 +1,32 @@
 {{template "headerpart" .}}
-<div class="col-sm-4">
+<div class="col-sm-7">
 	<div class="panel panel-default panel-custom" id="information_panel">
 		<div class="panel-heading">
 			<h1 class="panel-title">
 				<span class="glyphicon glyphicon-info-sign"></span> Information
 			</h1>
 		</div>
-		<div class="panel-body">No information. </div>
+		<div class="panel-body">
+			Clay build {{.version.BuildTime}}
+			<br>
+			<br>
+			<table class="table .table-condensed">
+				<tr>
+					<th width="40%">
+						<span class="glyphicon glyphicon-gift"></span> SubModule
+					</th>
+					<th width="60%">
+						<span class="glyphicon glyphicon-info-sign"></span> Version
+					</th>
+				</tr>
+				{{- range $i, $subModuleInformation := .version.SubModuleInformationList}}
+				<tr>
+					<td>{{$subModuleInformation.Name}}</td>
+					<td>{{$subModuleInformation.Revision}}</td>
+				</tr>
+				{{- end}}
+			</table>
+		</div>
 	</div>
 </div>
 <script language="javascript">
