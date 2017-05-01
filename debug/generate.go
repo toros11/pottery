@@ -1,5 +1,5 @@
 // +build debug
-// exec 'go generate -tags=debug ./debug/... to generate bindata for debugging
+// exec 'go generate -tags=debug ./debug/...' to generate bindata for debugging
 
 package debug
 
