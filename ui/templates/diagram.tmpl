@@ -12,7 +12,7 @@
 </div>
 
 <div class="context-menu">
-	<ul class="diagram-menu">
+	<ul>
 	</ul>
 </div>
 
@@ -74,10 +74,10 @@
 				item = menuItems[diagramElement][idx];
 
 				if(item["label"] == "divider") {
-					$('.diagram-menu').append('<li class="divider"></li>');
+					$('.contex-menu ul').append('<li class="divider"></li>');
 				} else {
 
-					$('.diagram-menu').append(
+					$('.context-menu ul').append(
 						$('<li>').append(
 							$('<a>').prop('href', item["url"]).append(
 								$('<span>').prop('class', 'glyphicon ' + item["icon"] +'')
@@ -90,7 +90,7 @@
 
 		function onUpdateContextMenu() {
 			d3.select('#diagram').on("contextmenu", function(data) {
-				var menuElement = $('.diagram-menu');
+				var menuElement = $('.context-menu ul');
 				menuElement.empty();
 
 				d3.event.preventDefault();
