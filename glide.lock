@@ -1,6 +1,12 @@
-hash: d7b057eafb34ce8ff06209cb5b7ce9e710541633648315d74699b3b535dd3076
-updated: 2017-04-24T20:17:05.607917514+09:00
+hash: c72b340ff6693c9a13ef4a12a29e0e0f861c58a1b11600a1da4f546e5ded3c24
+updated: 2017-05-01T15:40:15.298458871+09:00
 imports:
+- name: github.com/elazarl/go-bindata-assetfs
+  version: 30f82fa23fd844bd5bb1e5f216db87fd77b5eb43
+- name: github.com/gin-gonic/contrib
+  version: ffa12cf90b52a4af3ae604f6452e61f8218a517c
+  subpackages:
+  - static
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
   subpackages:
@@ -25,8 +31,9 @@ imports:
 - name: github.com/mattn/go-sqlite3
   version: ca5e3819723d8eeaf170ad510e7da1d6d2e94a08
 - name: github.com/qb0C80aE/clay
-  version: 11b5990bbe269fb04ec535e0b45d19cd12418120
+  version: ed87df734739bcaee95fbca00d1c9659d243da2d
   subpackages:
+  - buildtime
   - controllers
   - db
   - extensions
@@ -36,11 +43,13 @@ imports:
   - middleware
   - models
   - router
+  - runtime
   - server
   - submodules
   - utils/mapstruct
+  - version
 - name: github.com/qb0C80aE/loam
-  version: 0a6e50815893d8370328f120094abba6c71f0c5c
+  version: 6b0e6a98740d8dbe7733c4018484359796fbb15b
   subpackages:
   - controllers
   - logics

@@ -10,10 +10,13 @@ before_install:
 install:
  - go get github.com/Masterminds/glide
  - go get -u github.com/golang/lint/golint
+ - go get github.com/jteeuwen/go-bindata/...
 
 script:
  - glide install
+ - go vet $(glide novendor)
  - golint $(glide novendor)
+ - go generate -tags=generate ./...
  - go build -v
- - go test -v -race $(glide novendor)
+ - go test -tags=integration -v -race $(glide novendor)
 

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	clayControllers "github.com/qb0C80aE/clay/controllers"
 	"github.com/qb0C80aE/clay/extensions"
@@ -15,7 +16,6 @@ type physicalDiagramController struct {
 func newPhysicalDiagramController() extensions.Controller {
 	controller := &physicalDiagramController{
 		BaseController: clayControllers.NewBaseController(
-			"diagram_physical",
 			models.SharedDiagramModel(),
 			logics.UniquePhysicalDiagramLogic(),
 		),
@@ -25,7 +25,7 @@ func newPhysicalDiagramController() extensions.Controller {
 }
 
 func (controller *physicalDiagramController) RouteMap() map[int]map[string]gin.HandlerFunc {
-	url := "diagrams/physical"
+	url := fmt.Sprintf("%s/physical", controller.ResourceName())
 	routeMap := map[int]map[string]gin.HandlerFunc{
 		extensions.MethodGet: {
 			url: controller.GetSingle,
