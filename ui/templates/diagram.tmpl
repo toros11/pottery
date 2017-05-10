@@ -127,7 +127,9 @@
 
 		function onLoad() {
 			onUpdateNetworkDiagram();
-			onUpdateContextMenu();
+			if(diagramType != "logical") {
+				onUpdateContextMenu();
+			}
 		}
 
 		var timer = false;
