@@ -686,6 +686,26 @@
 			$('#edit_panel').fadeOut(150);
 		}
 
+		function onNodeModified(result, successCode, successMessage, ignoreSuccess) {
+			if (result.status == successCode) {
+				if (!ignoreSuccess) {
+					$('html,body').animate({scrollTop:0},'slow');
+					$('#information_message').text(successMessage);
+					$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
+					$('#edit_panel').fadeOut(150);
+					loadResources();
+					onUpdateNetworkDiagram();
+					onUpdateContextMenu();
+				}
+				return true;
+			} else {
+				$('html,body').animate({scrollTop:0},'slow');
+				$('#error_message').text(result.resource.error);
+				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
+				return false;
+			}
+		}
+
 		var diagramType = getUrlVars()['diagram_type'];
 		var diagramProperties = {
 			physical: {
