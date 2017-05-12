@@ -634,7 +634,6 @@
 		}
 
 		function onRegisterOrUpdateNode() {
-			alert($('#edit_node_pv').val());
 			if (editMode == 'Register') {
 				if (!confirm('Are you sure to register?')) {
 					return;
@@ -726,7 +725,7 @@
 					action: "edit"
 				},
 				{
-					label: "Edit node",
+					label: "Delete node",
 					id: "undefined", // defined in metadata
 					action: "delete"
 				}
@@ -768,8 +767,8 @@
 							).append(item["label"]);
 
 					if(meta != null) {
-						for(var field in meta) {
-							liElement.data(field.key, field.value);
+						for(var key in meta) {
+							liElement.data(key, meta[key]);
 						}
 
 					}
@@ -787,7 +786,6 @@
 				var x = d3.event.pageX;
 				var y = d3.event.pageY;
 				var context = getContextOfTarget(d3.event.target, "node") || { type: "diagram", meta: null }
-				console.log(context["meta"]);
 				createContextMenu(context["type"], context["meta"]);
 
 				showMenu($('.context-menu'), x, y)
@@ -870,18 +868,17 @@
 //			$("body").css({background-color: black;});
 			switch($(event.target).data("action")) {
 			case "add":
-				console.log("add");
 				onNewNode(event.target.id);
-				$('.col-sm-8').show();
+				$('.node-reg-panel').show();
 				break;
 			case "edit":
-				console.log("upd");
-				onEditNode($(event.target).data("nodeId"));
-				$('.col-sm-8').show();
+			        console.log("name: " + $(event.target).data("name"));
+			        console.log("id: " + $(event.target).data("id"));
+				onEditNode($(event.target).data("id"));
+				$('.node-reg-panel').show();
 				break;
 			case "delete":
-				console.log("del");
-				onDeleteNode($(event.target).data("nodeId"));
+				onDeleteNode($(event.target).data("name"));
 				break;
 			}
 		});
