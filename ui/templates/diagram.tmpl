@@ -705,13 +705,32 @@
 
 		var menuItems = {
 			diagram: [
-				{ label: "Add physical node", url: "url", icon: "glyphicon-plus" },
-				{ label: "Add virtual node",  url: "url", icon: "glyphicon-plus" },
+				{
+					label: "Add physical node",
+					id: "physical",
+					action: "add",
+				},
+				{
+					label: "Add virtual node",
+					id: "virtual",
+					action: "add",
+
+				},
                       //        { label: null, url: null },
-                      //        { label: "Add new test case", url: "url" }
+                      //        { label: "Add new test case", id: "" }
 			],
 			node: [
-				{ label: "Edit node", url: "url", icon: "glyphicon-edit" }
+				{
+					label: "Edit node",
+					id: "node", // defined in metadata
+					action: "edit"
+				},
+				{
+					label: "Edit node",
+					id: "undefined", // defined in metadata
+					action: "delete"
+				}
+
 			]
 		};
 
@@ -736,20 +755,25 @@
 		}
 
 		function createContextMenu(diagramElement, meta) {
+			var id;
+
 			for(var idx in menuItems[diagramElement]) {
 				item = menuItems[diagramElement][idx];
 
 				if(item["label"] == "divider") {
 					$('.contex-menu ul').append('<li class="divider"></li>');
 				} else {
+					var liElement = $('<li>').data('action', item["action"]).prop('id', item["id"]).append(
+								$('<span>').prop('class', 'item glyphicon')
+							).append(item["label"]);
 
-					$('.context-menu ul').append(
-						$('<li>').append(
-							$('<a>').prop('href', item["url"]).append(
-								$('<span>').prop('class', 'glyphicon ' + item["icon"] +'')
-							).append(item["label"])
-						)
-					);
+					if(meta != null) {
+						for(var field in meta) {
+							liElement.data(field.key, field.value);
+						}
+
+					}
+					$('.context-menu ul').append(liElement);
 				}
 			}
 		}
