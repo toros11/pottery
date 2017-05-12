@@ -11,7 +11,7 @@
 	</div>
 </div>
 
-<div class="col-sm-8">
+<div class="node-reg-panel">
 	<!-- Node Edit Panel -->
 	<div class="panel panel-default panel-custom" id="edit_panel">
 		<!-- Edit-Node Panel -->
@@ -900,12 +900,12 @@
 
 		$('#register_or_update_node_btn').on('click', function() {
 			onRegisterOrUpdateNode();
-			$('.col-sm-8').hide();
+			$('.node-reg-panel').hide();
 		});
 
 		$('#cancel_register_or_update_node_btn').on('click', function() {
 			onCancelRegisterOrUpdateNode();
-			$('.col-sm-8').hide();
+			$('.node-reg-panel').hide();
 		});
 
 		onLoad();

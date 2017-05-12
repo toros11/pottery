@@ -14,13 +14,13 @@ h1, h2, h3, h4, h5, h6 {
 	display: none;
 }
 
-.col-sm-8 {
-  top: -50px;
+.node-reg-panel {
+  top: -180px;
   right: 0;
   bottom: 0;
   left: 0;
   width: 66.66666667%;
-  height: 80%;
+  height: 75%;
   position: absolute;
   margin: auto;
   display: none;
