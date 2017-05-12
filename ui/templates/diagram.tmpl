@@ -693,9 +693,7 @@
 					$('#information_message').text(successMessage);
 					$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
 					$('#edit_panel').fadeOut(150);
-					loadResources();
-					onUpdateNetworkDiagram();
-					onUpdateContextMenu();
+				        location.reload(); // workaround for now as contextmenu events seems to stop getting trigged after a node is added
 				}
 				return true;
 			} else {
@@ -866,7 +864,6 @@
 			});
 
 			loadResources();
-			$('#nodes_panel').fadeIn(150);
 
 			onUpdateNetworkDiagram();
 			if(diagramType != "logical") {
@@ -885,7 +882,6 @@
 		});
 
 		$('#context-menu').on('click', function(event) {
-//			$("body").css({background-color: black;});
 			switch($(event.target).data("action")) {
 			case "add":
 				onNewNode(event.target.id);
