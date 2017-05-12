@@ -22,12 +22,12 @@ $ go get github.com/jteeuwen/go-bindata/...
 $ # Prerequisites: glide has been installed already.
 $ # Prerequisites: Clay has been cloned into $GOPATH/src/github.com/qb0C80aE/clay already.
 $ cd $GOPATH/src/github.com/qb0C80aE/clay
-$ # Edit: Add the '_ "github.com/qb0C80aE/loam" // Install Loam sub module by importing' line into the import section of submodules/submodules.go in Clay.
-$ # Edit: Add the '_ "github.com/qb0C80aE/pottery" // Install Pottery sub module by importing' line into the import section of submodules/submodules.go in Clay.
+$ # Edit: Add the '_ "github.com/qb0C80aE/loam" // Install Loam module by importing' line into the import section of main.go in Clay.
+$ # Edit: Add the '_ "github.com/qb0C80aE/pottery" // Install Pottery module by importing' line into the import section of main.go in Clay.
 $ glide get github.com/qb0C80aE/loam
 $ glide get github.com/qb0C80aE/pottery
 $ glide install
-$ go generate -tags=generate ./...
+$ go generate -tags=prebuild ./...
 $ go build
 $ ./clay &
 ```
