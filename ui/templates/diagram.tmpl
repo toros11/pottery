@@ -827,7 +827,7 @@
 						pop: /^([^\s-]+)-/,
 						distance: diagramProperties[diagramType].distance,
 						width: $('#diagram_canvas').width(),
-						height: 900
+						height: ($(window).height() - 180)
 					});
 					diagramInstance.init('interface');
 				});
