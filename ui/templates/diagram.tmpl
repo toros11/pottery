@@ -684,6 +684,9 @@
 
 			$('html,body').animate({scrollTop:0},'slow');
 			$('#edit_panel').fadeOut(150);
+			$('.node-reg-panel').fadeOut(150, function() {
+				$(this).hide();
+			});
 		}
 
 		function onNodeModified(result, successCode, successMessage, ignoreSuccess) {
@@ -753,11 +756,11 @@
 
 		function showMenu(menuElement, posX, posY) {
 			menuElement.css({left: posX, top: posY - 40});
-			menuElement.show();
+			menuElement.fadeIn(150);
 		}
 
 		function hideMenu(menuElement) {
-			menuElement.hide();
+			menuElement.fadeOut(150);
 		}
 
 		// recursive check because the "text" field of the node is one lever deeper in the xml tree and will not respond to the event otherwise
@@ -911,12 +914,10 @@
 
 		$('#register_or_update_node_btn').on('click', function() {
 			onRegisterOrUpdateNode();
-			$('.node-reg-panel').hide();
 		});
 
 		$('#cancel_register_or_update_node_btn').on('click', function() {
 			onCancelRegisterOrUpdateNode();
-			$('.node-reg-panel').hide();
 		});
 
 		onLoad();
