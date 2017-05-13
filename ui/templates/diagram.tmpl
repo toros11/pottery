@@ -884,6 +884,15 @@
 		    }, 200);
 		});
 
+		$(document).on("keydown" ,function(event) {
+			if (event.keyCode == 27) {
+				event.preventDefault();
+				if($('.node-reg-panel').is(":visible")) {
+					onCancelRegisterOrUpdateNode();
+				}
+			}
+		});
+
 		$('#context-menu').on('click', function(event) {
 			switch($(event.target).data("action")) {
 			case "add":
