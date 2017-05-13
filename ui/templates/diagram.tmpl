@@ -11,6 +11,46 @@
 	</div>
 </div>
 
+<div class="node-types-reg-panel">
+	<!-- Node Types Panel -->
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h1 class="panel-title">
+				<span class="glyphicon glyphicon-list-alt"></span> Node Types
+			</h1>
+		</div>
+		<div class="panel-body">
+		<table class="table table-condensed table-striped" id="node_types_table">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th>No.</th>
+					<th>Name</th>
+					<th>Icon</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+		<div style="margin-left:10px;margin-bottom:10px;">
+			<span class="input-group-btn">
+				<button id="add_node_type_btn" type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-minus"></span>
+				</button>
+				<button id="add_node_type_btn" type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-plus"></span>
+				</button>
+				<button id="register_or_update_node_types_btn" type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-ok"></span>
+				</button>
+				<button id="cancel_register_or_update_node_types_btn" type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-remove"></span>
+				</button>
+			</span>
+		</div>
+	</div><!-- /Node Types Panel -->
+</div>
+
 <div class="node-reg-panel">
 	<!-- Node Edit Panel -->
 	<div class="panel panel-default panel-custom" id="edit_panel">
@@ -677,16 +717,14 @@
 			onNodeModified(result, 204, 'The node was deleted successfully', false);
 		}
 
-		function onCancelRegisterOrUpdateNode() {
+		function onCancelRegisterOrUpdate(panelClass) {
+			if(!panelClass.is(":visible")) return;
 			if (!confirm('Are you sure to cancel?')) {
-				return;
+				return false;
 			}
 
 			$('html,body').animate({scrollTop:0},'slow');
-			$('#edit_panel').fadeOut(150);
-			$('.node-reg-panel').fadeOut(150, function() {
-				$(this).hide();
-			});
+			$(panelClass).fadeOut(150);
 		}
 
 		function onNodeModified(result, successCode, successMessage, ignoreSuccess) {
@@ -704,6 +742,25 @@
 				$('#error_message').text(result.resource.error);
 				$('#alert_error').fadeIn(500).delay(2000).fadeOut(1000);
 				return false;
+			}
+		}
+
+		function onManageNodeTypes() {
+			$('.node-types-reg-panel').fadeOut(150, function() {
+			});
+
+			$('.node-types-reg-panel').fadeIn(150);
+		}
+
+		function onAddNodeType() {
+		}
+
+		function onDeleteNodeType() {
+		}
+
+		function onApplyNodeTypes() {
+			if (!confirm('Apply changes?')) {
+				return;
 			}
 		}
 
@@ -728,40 +785,36 @@
 				{
 					label: "Add physical node",
 					id: "physical",
-					action: "add",
+					action: "add_node",
 				},
 				{
 					label: "Add virtual node",
 					id: "virtual",
-					action: "add",
-
+					action: "add_node",
 				},
-                      //        { label: null, url: null },
-                      //        { label: "Add new test case", id: "" }
+				{
+					label: null
+				},
+				{
+					label: "Manage node types",
+					id: "node_type",
+					action: "manage_node_types",
+				}
 			],
 			node: [
 				{
 					label: "Edit node",
-					id: "node", // defined in metadata
-					action: "edit"
+					id: null, // defined by metadata
+					action: "edit_node"
 				},
 				{
 					label: "Delete node",
-					id: "undefined", // defined in metadata
-					action: "delete"
+					id: null, // defined by metadata
+					action: "delete_delete"
 				}
 
 			]
 		};
-
-		function showMenu(menuElement, posX, posY) {
-			menuElement.css({left: posX, top: posY - 40});
-			menuElement.fadeIn(150);
-		}
-
-		function hideMenu(menuElement) {
-			menuElement.fadeOut(150);
-		}
 
 		// recursive check because the "text" field of the node is one lever deeper in the xml tree and will not respond to the event otherwise
 		function getContextOfTarget (target, targetValue) {
@@ -801,9 +854,9 @@
 
 		function onUpdateContextMenu() {
 			d3.select('#diagram').on("contextmenu", function(data) {
-				if($('.node-reg-panel').is(":visible")) return;
-				var menuElement = $('.context-menu ul');
-				menuElement.empty();
+			        if($('.node-reg-panel').is(":visible") || $('.node-types-reg-panel').is(":visible")) return;
+				var menuElement = $('.context-menu');
+				$('.context-menu ul').empty();
 
 				d3.event.preventDefault();
 				var x = d3.event.pageX;
@@ -811,13 +864,10 @@
 				var context = getContextOfTarget(d3.event.target, "node") || { type: "diagram", meta: null }
 				createContextMenu(context["type"], context["meta"]);
 
-				showMenu($('.context-menu'), x, y)
+				menuElement.css({left: x, top: y - 40});
+				menuElement.fadeIn(150);
 			});
 		}
-
-		$("body").on("click", function(event) {
-			hideMenu($('.context-menu'));
-		});
 
 		function onUpdateNetworkDiagram() {
 			$('#diagram_panel').fadeOut(150, function() {
@@ -895,6 +945,11 @@
 			}
 		});
 
+		$("body").on("click", function(event) {
+			$('.context-menu').fadeOut(150);
+		});
+
+		// context menu options
 		$('#context-menu').on('click', function(event) {
 			switch($(event.target).data("action")) {
 			case "add":
@@ -911,6 +966,7 @@
 			}
 		});
 
+		// ports
 		$('#edit_add_port_btn').on('click', function() {
 			onAddPort();
 		});
@@ -928,8 +984,26 @@
 		});
 
 		$('#cancel_register_or_update_node_btn').on('click', function() {
-			onCancelRegisterOrUpdateNode();
+			onCancelRegisterOrUpdate($('.node-reg-panel'));
 		});
+
+		// node types
+		$('#edit_add_node_type_btn').on('click', function() {
+			onAddNodeType();
+		});
+
+		$('#edit_delete_node_type_btn').on('click', function() {
+			onDeleteNodeType();
+		});
+
+		$('#register_or_update_node_types_btn').on('click', function() {
+			onRegisterOrUpdateNodeTypes();
+		});
+
+		$('#cancel_register_or_update_node_types_btn').on('click', function() {
+			onCancelRegisterOrUpdate($('.node-types-reg-panel'));
+		});
+
 
 		onLoad();
 

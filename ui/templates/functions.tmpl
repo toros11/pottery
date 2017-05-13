@@ -74,6 +74,22 @@ function postResource(target, resource) {
   return result;
 }
 
+function postModel(modelType) {
+  var response = $.ajax({
+    type: 'POST',
+    url: '/node_types',
+    dataType: 'json',
+    contentTpe: 'application/json',
+    data: JSON.stringify(modelType),
+    async: false
+  });
+  var resultmodel = ;
+  return {
+    status: response.status
+    response: $.parseJSON(response.responseText)
+  };
+}
+
 function putResource(target, id, resource) {
   var response = $.ajax({
     type: 'PUT',
