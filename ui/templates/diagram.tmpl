@@ -888,13 +888,11 @@
 				$('.node-reg-panel').show();
 				break;
 			case "edit":
-			        console.log("name: " + $(event.target).data("name"));
-			        console.log("id: " + $(event.target).data("id"));
-				onEditNode($(event.target).data("id"));
+				onEditNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
 				$('.node-reg-panel').show();
 				break;
 			case "delete":
-				onDeleteNode($(event.target).data("name"));
+				onDeleteNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
 				break;
 			}
 		});
