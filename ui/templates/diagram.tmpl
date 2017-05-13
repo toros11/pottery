@@ -53,7 +53,7 @@
 
 <div class="node-reg-panel">
 	<!-- Node Edit Panel -->
-	<div class="panel panel-default panel-custom" id="edit_panel">
+	<div class="panel panel-default" id="edit_panel">
 		<!-- Edit-Node Panel -->
 		<div class="panel-heading">
 			<h3 class="panel-title">
@@ -508,7 +508,7 @@
 				return;
 			}
 
-			$('#edit_panel').fadeOut(150, function() {
+			$('.node-reg-panel').fadeOut(150, function() {
 				// Set edit mode to Update
 				editMode = 'Update';
 				$('#register_or_update_node_panel_title').children().remove();
@@ -518,6 +518,7 @@
 				editingNode = nodeMap[nodeId];
 
 				// Initialize Node properties
+				$('#edit_node_pv').parents("tr").show();
 				$('#edit_node_pv').children().remove();
 				for (key in nodePvMap){
 				$('#edit_node_pv').append($('<option>').val(nodePvMap[key]).text(key));
@@ -569,18 +570,18 @@
 					]);
 	 			}
 
-				$('#edit_panel').fadeIn(150, function() {
+				$('.node-reg-panel').fadeIn(150, function() {
 					editPortsTable.fnDraw(true);
 				});
 			});
 		}
 
 		function onNewNode(nodeType) {
-			$('#edit_panel').fadeOut(150, function() {
+			$('.node-reg-panel').fadeOut(150, function() {
 				// Set edit mode to Update
 				editMode = 'Register';
 				$('#register_or_update_node_panel_title').children().remove();
-				$('#register_or_update_node_panel_title').append($('<span>').text('Node registration'));
+				$('#register_or_update_node_panel_title').append($('<span>').text('Node registration ('+ nodeType +')'));
 
 				// Clear the editing node
 				editingNode = createNodeModel(null, '', 1, false, '', false, '');
@@ -608,8 +609,7 @@
 				for (var i = rowCount - 1; 0 <= i; i = i - 1) {
 					editPortsTable.fnDeleteRow(i, null, false);
 				}
-
-				$('#edit_panel').fadeIn(150, function() {
+				$('.node-reg-panel').fadeIn(150, function() {
 					editPortsTable.fnDraw(true);
 				});
 			});
@@ -733,7 +733,7 @@
 					$('html,body').animate({scrollTop:0},'slow');
 					$('#information_message').text(successMessage);
 					$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
-					$('#edit_panel').fadeOut(150);
+					$('.node-reg-panel').fadeOut(150);
 				        location.reload(); // workaround for now as contextmenu events seems to stop getting trigged after a node is added
 				}
 				return true;
@@ -952,16 +952,17 @@
 		// context menu options
 		$('#context-menu').on('click', function(event) {
 			switch($(event.target).data("action")) {
-			case "add":
+			case "add_node":
 				onNewNode(event.target.id);
-				$('.node-reg-panel').show();
 				break;
-			case "edit":
+			case "edit_node":
 				onEditNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
-				$('.node-reg-panel').show();
 				break;
-			case "delete":
+			case "delete_node":
 				onDeleteNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
+				break;
+			case "manage_node_types":
+				onManageNodeTypes();
 				break;
 			}
 		});
