@@ -780,8 +780,8 @@
 			for(var idx in menuItems[diagramElement]) {
 				item = menuItems[diagramElement][idx];
 
-				if(item["label"] == "divider") {
-					$('.contex-menu ul').append('<li class="divider"></li>');
+				if(item["label"] == null) {
+					var liElement = $('<li>').prop('class', 'divider');
 				} else {
 					var liElement = $('<li>').data('action', item["action"]).prop('id', item["id"]).append(
 								$('<span>').prop('class', 'item glyphicon')
@@ -793,8 +793,9 @@
 						}
 
 					}
-					$('.context-menu ul').append(liElement);
 				}
+
+				$('.context-menu ul').append(liElement);
 			}
 		}
 
