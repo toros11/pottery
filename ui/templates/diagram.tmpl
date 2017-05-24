@@ -11,46 +11,6 @@
 	</div>
 </div>
 
-<div class="node-types-reg-panel">
-	<!-- Node Types Panel -->
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h1 class="panel-title">
-				<span class="glyphicon glyphicon-list-alt"></span> Node Types
-			</h1>
-		</div>
-		<div class="panel-body">
-		<table class="table table-condensed table-striped" id="node_types_table">
-			<thead>
-				<tr>
-					<th>&nbsp;</th>
-					<th>No.</th>
-					<th>Name</th>
-					<th>Icon</th>
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
-	</div>
-		<div style="margin-left:10px;margin-bottom:10px;">
-			<span class="input-group-btn">
-				<button id="add_node_type_btn" type="button" class="btn btn-default">
-					<span class="glyphicon glyphicon-minus"></span>
-				</button>
-				<button id="add_node_type_btn" type="button" class="btn btn-default">
-					<span class="glyphicon glyphicon-plus"></span>
-				</button>
-				<button id="register_or_update_node_types_btn" type="button" class="btn btn-default">
-					<span class="glyphicon glyphicon-ok"></span>
-				</button>
-				<button id="cancel_register_or_update_node_types_btn" type="button" class="btn btn-default">
-					<span class="glyphicon glyphicon-remove"></span>
-				</button>
-			</span>
-		</div>
-	</div><!-- /Node Types Panel -->
-</div>
-
 <div class="node-reg-panel">
 	<!-- Node Edit Panel -->
 	<div class="panel panel-default" id="edit_panel">
@@ -745,25 +705,6 @@
 			}
 		}
 
-		function onManageNodeTypes() {
-			$('.node-types-reg-panel').fadeOut(150, function() {
-			});
-
-			$('.node-types-reg-panel').fadeIn(150);
-		}
-
-		function onAddNodeType() {
-		}
-
-		function onDeleteNodeType() {
-		}
-
-		function onApplyNodeTypes() {
-			if (!confirm('Apply changes?')) {
-				return;
-			}
-		}
-
 		var diagramType = getUrlVars()['diagram_type'];
 		var diagramProperties = {
 			physical: {
@@ -791,14 +732,6 @@
 					label: "Add virtual node",
 					id: "virtual",
 					action: "add_node",
-				},
-				{
-					label: null
-				},
-				{
-					label: "Manage node types",
-					id: "node_type",
-					action: "manage_node_types",
 				}
 			],
 			node: [
@@ -854,7 +787,7 @@
 
 		function onUpdateContextMenu() {
 			d3.select('#diagram').on("contextmenu", function(data) {
-			        if($('.node-reg-panel').is(":visible") || $('.node-types-reg-panel').is(":visible")) return;
+			    if($('.node-reg-panel').is(":visible")) { return; }
 				var menuElement = $('.context-menu');
 				$('.context-menu ul').empty();
 
@@ -939,9 +872,8 @@
 		$(document).on("keydown" ,function(event) {
 			if (event.keyCode == 27) {
 				event.preventDefault();
-				if($('.node-reg-panel').is(":visible")) {
-					onCancelRegisterOrUpdateNode();
-				}
+
+				onCancelRegisterOrUpdate($('.node-reg-panel'));
 			}
 		});
 
@@ -960,9 +892,6 @@
 				break;
 			case "delete_node":
 				onDeleteNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
-				break;
-			case "manage_node_types":
-				onManageNodeTypes();
 				break;
 			}
 		});
@@ -987,24 +916,6 @@
 		$('#cancel_register_or_update_node_btn').on('click', function() {
 			onCancelRegisterOrUpdate($('.node-reg-panel'));
 		});
-
-		// node types
-		$('#edit_add_node_type_btn').on('click', function() {
-			onAddNodeType();
-		});
-
-		$('#edit_delete_node_type_btn').on('click', function() {
-			onDeleteNodeType();
-		});
-
-		$('#register_or_update_node_types_btn').on('click', function() {
-			onRegisterOrUpdateNodeTypes();
-		});
-
-		$('#cancel_register_or_update_node_types_btn').on('click', function() {
-			onCancelRegisterOrUpdate($('.node-types-reg-panel'));
-		});
-
 
 		onLoad();
 
