@@ -699,7 +699,10 @@
 					$('#information_message').text(successMessage);
 					$('#alert_info').fadeIn(500).delay(2000).fadeOut(1000);
 					$('.node-reg-panel').fadeOut(150);
-				        location.reload(); // workaround for now as contextmenu events seems to stop getting trigged after a node is added
+
+					$('.page-cover').fadeOut(150);
+					$('.node-reg-panel').fadeOut(150);
+					onUpdateNetworkDiagram();
 				}
 				return true;
 			} else {
@@ -748,7 +751,7 @@
 				{
 					label: "Delete node",
 					id: null, // defined by metadata
-					action: "delete_delete"
+					action: "delete_node"
 				}
 
 			]
