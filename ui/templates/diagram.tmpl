@@ -1,4 +1,8 @@
+<div class="page-cover">
+</div>
 {{template "headerpart" .}}
+
+
 <div class="panel panel-default panel-custom" id="diagram_panel">
 	<div class="panel-heading">
 		<h1 class="panel-title">
@@ -685,6 +689,7 @@
 
 			$('html,body').animate({scrollTop:0},'slow');
 			$(panelClass).fadeOut(150);
+			$('.page-cover').fadeOut(150);
 		}
 
 		function onNodeModified(result, successCode, successMessage, ignoreSuccess) {
@@ -885,9 +890,11 @@
 		$('#context-menu').on('click', function(event) {
 			switch($(event.target).data("action")) {
 			case "add_node":
+				$('.page-cover').fadeIn(150);
 				onNewNode(event.target.id);
 				break;
 			case "edit_node":
+				$('.page-cover').fadeIn(150);
 				onEditNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
 				break;
 			case "delete_node":
