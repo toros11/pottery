@@ -1,5 +1,6 @@
 // +build debug
-// execute 'go run -tags=debug ./debug/main.go' and access localhost:8080/ui for GUI debugging or manual testing
+// execute 'go run debug/main.go' and access localhost:8080/<resource> or localhost:8080/ui for API and UI debugging or manual testing
+// note: generate bindata.go first. see debug/generate.go.
 
 package main
 

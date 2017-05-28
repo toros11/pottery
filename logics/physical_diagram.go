@@ -8,6 +8,7 @@ import (
 	"github.com/qb0C80aE/clay/utils/mapstruct"
 	loamModels "github.com/qb0C80aE/loam/models"
 	"github.com/qb0C80aE/pottery/models"
+	"net/url"
 )
 
 var physicalNodeIconPaths = map[int]string{
@@ -31,7 +32,7 @@ func newPhysicalDiagramLogic() *physicalDiagramLogic {
 	return logic
 }
 
-func (logic *physicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields string) (interface{}, error) {
+func (logic *physicalDiagramLogic) GetSingle(db *gorm.DB, id string, _ url.Values, queryFields string) (interface{}, error) {
 	diagram := &models.Diagram{}
 
 	nodes := []*loamModels.Node{}

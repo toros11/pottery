@@ -1,25 +1,25 @@
 hash: c72b340ff6693c9a13ef4a12a29e0e0f861c58a1b11600a1da4f546e5ded3c24
-updated: 2017-05-01T15:40:15.298458871+09:00
+updated: 2017-05-28T19:58:20.96480548+09:00
 imports:
 - name: github.com/elazarl/go-bindata-assetfs
   version: 30f82fa23fd844bd5bb1e5f216db87fd77b5eb43
 - name: github.com/gin-gonic/contrib
-  version: ffa12cf90b52a4af3ae604f6452e61f8218a517c
+  version: 2332af67366e42c9215101b4d5a0805f3292b17b
   subpackages:
   - static
 - name: github.com/gin-gonic/gin
-  version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
+  version: d5b353c5d5a560322e6d96121c814115562501f7
   subpackages:
   - binding
   - render
 - name: github.com/golang/protobuf
-  version: 2402d76f3d41f928c7902a765dfc872356dd3aad
+  version: 9f174c986221c608fb5143bd623b6076a71feae3
   subpackages:
   - proto
 - name: github.com/higanworks/envmap
   version: 4eb38fd4f96bdca0deb8691ae3d25ac97912d650
 - name: github.com/jinzhu/gorm
-  version: 45ccb134373e7d9fa76d5987a6fed6cd5a5adfd4
+  version: 9acaa33324bbcc78239a1c913d4f1292c12177b9
   subpackages:
   - dialects/sqlite
 - name: github.com/jinzhu/inflection
@@ -31,7 +31,7 @@ imports:
 - name: github.com/mattn/go-sqlite3
   version: ca5e3819723d8eeaf170ad510e7da1d6d2e94a08
 - name: github.com/qb0C80aE/clay
-  version: ed87df734739bcaee95fbca00d1c9659d243da2d
+  version: dd10be69666825b6f45b3523ce0d9c7188a9e324
   subpackages:
   - buildtime
   - controllers
@@ -45,28 +45,27 @@ imports:
   - router
   - runtime
   - server
-  - submodules
   - utils/mapstruct
   - version
 - name: github.com/qb0C80aE/loam
-  version: 6b0e6a98740d8dbe7733c4018484359796fbb15b
+  version: d43d8e6ff7253e96505047ffde7e6dda7d63c2b0
   subpackages:
   - controllers
   - logics
   - models
   - utils/net
 - name: github.com/serenize/snaker
-  version: 543781d2b79bd95c51ffe70e70a55c946ca211ff
+  version: 1c7f65329f6524115af8ca01ab604c00cddf5558
 - name: golang.org/x/net
-  version: f315505cf3349909cdf013ea56690da34e96a451
+  version: 48359f4f600b3a2d5cf657458e3f940021631a56
   subpackages:
   - context
 - name: golang.org/x/sys
-  version: f3918c30c5c2cb527c0b071a27c35120a6c0719a
+  version: a55a76086885b80f79961eacb876ebd8caf3868d
   subpackages:
   - unix
 - name: gopkg.in/go-playground/validator.v8
-  version: c193cecd124b5cc722d7ee5538e945bdb3348435
+  version: 5f57d2222ad794d0dffb07e664ea05e2ee07d60c
 - name: gopkg.in/yaml.v2
   version: cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b
 testImports: []

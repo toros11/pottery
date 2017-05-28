@@ -1,5 +1,5 @@
 // +build debug
-// execute 'go generate -tags=debug ./debug/...' to generate bindata for debugging
+// execute 'go generate -tags=debug debug/generate.go' or 'go generate -tags=debug ./...' to generate bindata.go for debugging manually
 
 package main
 

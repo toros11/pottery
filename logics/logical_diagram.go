@@ -9,6 +9,7 @@ import (
 	loamLogics "github.com/qb0C80aE/loam/logics"
 	loamModels "github.com/qb0C80aE/loam/models"
 	"github.com/qb0C80aE/pottery/models"
+	"net/url"
 )
 
 var virtualNodeIconPaths = map[int]string{
@@ -34,7 +35,7 @@ func newLogicalDiagramLogic() *logicalDiagramLogic {
 	return logic
 }
 
-func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, queryFields string) (interface{}, error) {
+func (logic *logicalDiagramLogic) GetSingle(db *gorm.DB, id string, _ url.Values, queryFields string) (interface{}, error) {
 	segments, err := loamLogics.GenerateSegments(db)
 	if err != nil {
 		return nil, err

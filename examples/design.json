@@ -1251,7 +1251,7 @@
         "port_extra_attributes": null
       }
     ],
-    "template_external_parameters": [],
+    "template_persistent_parameters": [],
     "templates": []
   }
 }

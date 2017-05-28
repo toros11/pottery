@@ -126,22 +126,6 @@ function deleteResource(target, id) {
   return result;
 }
 
-function patchResource(target, id) {
-  var response = $.ajax({
-    type: 'PATCH',
-    url: '/' + target + '/' + id,
-    dataType: 'json',
-    contentType: 'application/json',
-    async: false
-  });
-  var resultText = response.responseText;
-  var result = {
-    status: response.status,
-    resource: resultText
-  };
-  return result;
-}
-
 function buildResouceMapFromResourceArray(resources) {
   var result = {};
   for (var i = 0; i < resources.length; i = i + 1) {

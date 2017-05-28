@@ -12,7 +12,6 @@ before_install:
   - TAGS+=(debug)
   - TAGS+=(integration)
   - TAGS+=(prebuild)
-  - TAGS+=(build)
   - go version
 
 install:
