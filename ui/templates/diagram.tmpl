@@ -791,19 +791,22 @@
 		}
 
 		function onUpdateContextMenu() {
-			d3.select('#diagram').on("contextmenu", function(data) {
-			    if($('.node-reg-panel').is(":visible")) { return; }
-				var menuElement = $('.context-menu');
-				$('.context-menu ul').empty();
+			if(diagramType == "logical") { return; }
+			$("#diagram").ready(function() {
+				d3.select('#diagram').on("contextmenu", function(data) {
+					if($('.node-reg-panel').is(":visible")) { return; }
+					var menuElement = $('.context-menu');
+					$('.context-menu ul').empty();
 
-				d3.event.preventDefault();
-				var x = d3.event.pageX;
-				var y = d3.event.pageY;
-				var context = getContextOfTarget(d3.event.target, "node") || { type: "diagram", meta: null }
-				createContextMenu(context["type"], context["meta"]);
+					d3.event.preventDefault();
+					var x = d3.event.pageX;
+					var y = d3.event.pageY;
+					var context = getContextOfTarget(d3.event.target, "node") || { type: "diagram", meta: null }
+					createContextMenu(context["type"], context["meta"]);
 
-				menuElement.css({left: x, top: y - 40});
-				menuElement.fadeIn(150);
+					menuElement.css({left: x, top: y - 40});
+					menuElement.fadeIn(150);
+				});
 			});
 		}
 
@@ -820,6 +823,7 @@
 						height: ($(window).height() - 180)
 					});
 					diagramInstance.init('interface');
+					onUpdateContextMenu()
 				});
 			});
 		}
@@ -859,9 +863,6 @@
 			loadResources();
 
 			onUpdateNetworkDiagram();
-			if(diagramType != "logical") {
-				onUpdateContextMenu();
-			}
 		}
 
 		var timer = false;
