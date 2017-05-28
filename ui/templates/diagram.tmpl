@@ -679,6 +679,9 @@
 
 			var result = deleteResource('nodes', nodeId);
 			onNodeModified(result, 204, 'The node was deleted successfully', false);
+
+			loadResources();
+			onUpdateNetworkDiagram();
 		}
 
 		function onCancelRegisterOrUpdate(panelClass) {
@@ -702,6 +705,7 @@
 
 					$('.page-cover').fadeOut(150);
 					$('.node-reg-panel').fadeOut(150);
+					loadResources();
 					onUpdateNetworkDiagram();
 				}
 				return true;
@@ -825,7 +829,7 @@
 						width: $('#diagram_canvas').width(),
 						height: ($(window).height() - 180)
 					});
-					diagramInstance.init('interface');
+					diagramInstance.init('interface', 'node_id');
 					onUpdateContextMenu()
 				});
 			});
@@ -899,10 +903,10 @@
 				break;
 			case "edit_node":
 				$('.page-cover').fadeIn(150);
-				onEditNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
+				onEditNode($(event.target).data("meta")[0].value); // the indexing of the nodeMap starts at 1
 				break;
 			case "delete_node":
-				onDeleteNode($(event.target).data("id") + 1); // the indexing of the nodeMap starts at 1
+				onDeleteNode($(event.target).data("meta")[0].value); // the indexing of the nodeMap starts at 1
 				break;
 			}
 		});

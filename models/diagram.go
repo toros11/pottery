@@ -11,8 +11,13 @@ type Diagram struct {
 
 // DiagramNode is the model class what represents nodes in diagrams
 type DiagramNode struct {
-	Name string `json:"name"`
-	Icon string `json:"icon"`
+	Name string           `json:"name"`
+	Icon string           `json:"icon"`
+	Meta *DiagramNodeMeta `json:"meta"`
+}
+
+type DiagramNodeMeta struct {
+	NodeID int `json:"node_id"`
 }
 
 // DiagramInterface is the model class what represents interfaces of nodes in diagrams
