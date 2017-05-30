@@ -1,8 +1,5 @@
-<div class="page-cover">
-</div>
+<div class="page-cover"></div>
 {{template "headerpart" .}}
-
-
 <div class="panel panel-default panel-custom" id="diagram_panel">
 	<div class="panel-heading">
 		<h1 class="panel-title">
@@ -735,29 +732,12 @@
 
 		var menuItems = {
 			diagram: [
-				{
-					label: "Add physical node",
-					id: "physical",
-					action: "add_node",
-				},
-				{
-					label: "Add virtual node",
-					id: "virtual",
-					action: "add_node",
-				}
+				{ label: "Add physical node", action: "add_node", type: "physical" },
+				{ label: "Add virtual node", action: "add_node", type: "virtual" }
 			],
 			node: [
-				{
-					label: "Edit node",
-					id: null, // defined by metadata
-					action: "edit_node"
-				},
-				{
-					label: "Delete node",
-					id: null, // defined by metadata
-					action: "delete_node"
-				}
-
+				{ label: "Edit node", action: "edit_node" },
+				{ label: "Delete node", action: "delete_node" }
 			]
 		};
 
@@ -773,15 +753,13 @@
 		}
 
 		function createContextMenu(diagramElement, meta) {
-			var id;
-
 			for(var idx in menuItems[diagramElement]) {
 				item = menuItems[diagramElement][idx];
 
 				if(item["label"] == null) {
 					var liElement = $('<li>').prop('class', 'divider');
 				} else {
-					var liElement = $('<li>').data('action', item["action"]).prop('id', item["id"]).append(
+					var liElement = $('<li>').data('action', item["action"]).append(
 								$('<span>').prop('class', 'item glyphicon')
 							).append(item["label"]);
 
@@ -789,19 +767,22 @@
 						for(var key in meta) {
 							liElement.data(key, meta[key]);
 						}
-
+					}
+					if(item["type"] != null) {
+						liElement.prop('id', item["type"])
 					}
 				}
-
 				$('.context-menu ul').append(liElement);
 			}
 		}
 
 		function onUpdateContextMenu() {
-			if(diagramType == "logical") { return; }
+			if(diagramType == "logical") return;
+
 			$("#diagram").ready(function() {
 				d3.select('#diagram').on("contextmenu", function(data) {
-					if($('.node-reg-panel').is(":visible")) { return; }
+					if($('.node-reg-panel').is(":visible")) return;
+
 					var menuElement = $('.context-menu');
 					$('.context-menu ul').empty();
 
@@ -868,7 +849,6 @@
 			});
 
 			loadResources();
-
 			onUpdateNetworkDiagram();
 		}
 
@@ -903,10 +883,10 @@
 				break;
 			case "edit_node":
 				$('.page-cover').fadeIn(150);
-				onEditNode($(event.target).data("meta")[0].value); // the indexing of the nodeMap starts at 1
+				onEditNode($(event.target).data("meta")[0].value);
 				break;
 			case "delete_node":
-				onDeleteNode($(event.target).data("meta")[0].value); // the indexing of the nodeMap starts at 1
+				onDeleteNode($(event.target).data("meta")[0].value);
 				break;
 			}
 		});
