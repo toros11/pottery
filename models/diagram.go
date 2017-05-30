@@ -16,6 +16,7 @@ type DiagramNode struct {
 	Meta *DiagramNodeMeta `json:"meta"`
 }
 
+// DiagramNodeMeta is the model class that represents the meta information on diagram nodes
 type DiagramNodeMeta struct {
 	NodeID int `json:"node_id"`
 }
