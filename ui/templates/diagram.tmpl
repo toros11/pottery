@@ -863,11 +863,17 @@
 		});
 
 		$(document).on("keydown" ,function(event) {
+			if(!$('.node-reg-panel').is(":visible")) return;
+
 			if (event.keyCode == 27) {
 				event.preventDefault();
-
 				onCancelRegisterOrUpdate($('.node-reg-panel'));
 			}
+			if (event.keyCode == 13) {
+				event.preventDefault();
+				onRegisterOrUpdateNode();
+			}
+
 		});
 
 		$("body").on("click", function(event) {
